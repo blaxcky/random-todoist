@@ -37,9 +37,10 @@ class TodoistApp {
         document.getElementById('postpone-task').addEventListener('click', () => this.postponeTask());
         document.getElementById('next-task').addEventListener('click', () => this.loadRandomTask());
         document.getElementById('refresh-tasks').addEventListener('click', () => this.loadTasks());
-        document.getElementById('edit-title').addEventListener('click', () => this.startEditTitle());
+        document.getElementById('edit-title').addEventListener('click', () => this.openEditPopup());
         document.getElementById('save-title').addEventListener('click', () => this.saveTitle());
-        document.getElementById('cancel-edit').addEventListener('click', () => this.cancelEditTitle());
+        document.getElementById('cancel-edit').addEventListener('click', () => this.closeEditPopup());
+        document.getElementById('close-popup').addEventListener('click', () => this.closeEditPopup());
         document.getElementById('force-reload').addEventListener('click', () => this.forceReload());
         
         document.addEventListener('click', (e) => {
@@ -60,7 +61,14 @@ class TodoistApp {
                 this.saveTitle();
             } else if (e.key === 'Escape') {
                 e.preventDefault();
-                this.cancelEditTitle();
+                this.closeEditPopup();
+            }
+        });
+        
+        // Close popup when clicking backdrop
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('edit-popup-backdrop')) {
+                this.closeEditPopup();
             }
         });
     }
@@ -324,21 +332,24 @@ class TodoistApp {
         document.getElementById('error-message').textContent = message;
     }
 
-    startEditTitle() {
+    openEditPopup() {
         const titleElement = document.getElementById('task-title');
         const inputElement = document.getElementById('task-title-input');
-        const editButton = document.getElementById('edit-title');
-        const editActions = document.querySelector('.edit-actions');
-        const titleContainer = document.querySelector('.task-title-container');
+        const popup = document.getElementById('edit-popup');
 
         inputElement.value = titleElement.textContent;
+        popup.style.display = 'flex';
         
-        titleContainer.style.display = 'none';
-        inputElement.style.display = 'block';
-        editActions.style.display = 'flex';
-        
-        inputElement.focus();
-        inputElement.select();
+        // Focus textarea after animation
+        setTimeout(() => {
+            inputElement.focus();
+            inputElement.select();
+        }, 100);
+    }
+
+    closeEditPopup() {
+        const popup = document.getElementById('edit-popup');
+        popup.style.display = 'none';
     }
 
     async saveTitle() {
@@ -387,7 +398,7 @@ class TodoistApp {
 
             document.getElementById('task-title').textContent = newTitle;
             this.adjustTitleSize(document.getElementById('task-title'), newTitle);
-            this.cancelEditTitle();
+            this.closeEditPopup();
 
         } catch (error) {
             console.error('Fehler beim Speichern des Titels:', error);
@@ -400,15 +411,6 @@ class TodoistApp {
         }
     }
 
-    cancelEditTitle() {
-        const titleContainer = document.querySelector('.task-title-container');
-        const inputElement = document.getElementById('task-title-input');
-        const editActions = document.querySelector('.edit-actions');
-
-        titleContainer.style.display = 'flex';
-        inputElement.style.display = 'none';
-        editActions.style.display = 'none';
-    }
 
     async forceReload() {
         const reloadButton = document.getElementById('force-reload');

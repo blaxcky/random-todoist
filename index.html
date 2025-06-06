@@ -39,11 +39,6 @@
                             <h2 id="task-title"></h2>
                         </div>
                         <button id="edit-title" class="btn-edit-floating">✏️</button>
-                        <textarea id="task-title-input" class="task-title-input" style="display: none;" rows="3"></textarea>
-                        <div class="edit-actions" style="display: none;">
-                            <button id="save-title" class="btn-save">💾 Speichern</button>
-                            <button id="cancel-edit" class="btn-cancel">❌ Abbrechen</button>
-                        </div>
                     </div>
                     
                     <div class="task-details-block">
@@ -79,6 +74,24 @@
                 </div>
             </div>
         </footer>
+    </div>
+    
+    <!-- Edit Title Popup -->
+    <div id="edit-popup" class="edit-popup" style="display: none;">
+        <div class="edit-popup-backdrop"></div>
+        <div class="edit-popup-content">
+            <div class="edit-popup-header">
+                <h3>Aufgabentitel bearbeiten</h3>
+                <button id="close-popup" class="btn-close-popup">✕</button>
+            </div>
+            <div class="edit-popup-body">
+                <textarea id="task-title-input" class="popup-textarea" placeholder="Aufgabentitel eingeben..."></textarea>
+            </div>
+            <div class="edit-popup-footer">
+                <button id="cancel-edit" class="btn-cancel-popup">Abbrechen</button>
+                <button id="save-title" class="btn-save-popup">Speichern</button>
+            </div>
+        </div>
     </div>
     
     <script src="app.js"></script>
