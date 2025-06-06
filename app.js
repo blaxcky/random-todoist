@@ -361,6 +361,7 @@ class TodoistApp {
         reloadButton.style.opacity = '0.7';
 
         try {
+            // Service Worker stoppen
             if ('serviceWorker' in navigator) {
                 const registrations = await navigator.serviceWorker.getRegistrations();
                 for (let registration of registrations) {
@@ -368,6 +369,7 @@ class TodoistApp {
                 }
             }
 
+            // Alle Caches löschen
             if ('caches' in window) {
                 const cacheNames = await caches.keys();
                 await Promise.all(
@@ -375,9 +377,12 @@ class TodoistApp {
                 );
             }
 
-            setTimeout(() => {
-                window.location.reload(true);
-            }, 500);
+            // Browser-Cache headers setzen für Force Reload
+            const timestamp = Date.now();
+            const newUrl = window.location.href.split('?')[0] + `?_=${timestamp}`;
+            
+            // Hard reload mit Cache-Busting
+            window.location.replace(newUrl);
 
         } catch (error) {
             console.error('Fehler beim Cache leeren:', error);
