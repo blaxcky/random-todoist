@@ -138,8 +138,26 @@ class TodoistApp {
             return;
         }
 
-        const randomIndex = Math.floor(Math.random() * this.tasks.length);
-        this.currentTask = this.tasks[randomIndex];
+        if (this.tasks.length === 1) {
+            this.currentTask = this.tasks[0];
+            this.displayTask(this.currentTask);
+            return;
+        }
+
+        // Filtere die aktuelle Aufgabe aus der Liste
+        const availableTasks = this.tasks.filter(task => 
+            !this.currentTask || task.id !== this.currentTask.id
+        );
+
+        if (availableTasks.length === 0) {
+            // Fallback: Alle Aufgaben wieder verfügbar machen
+            const randomIndex = Math.floor(Math.random() * this.tasks.length);
+            this.currentTask = this.tasks[randomIndex];
+        } else {
+            const randomIndex = Math.floor(Math.random() * availableTasks.length);
+            this.currentTask = availableTasks[randomIndex];
+        }
+        
         this.displayTask(this.currentTask);
     }
 
