@@ -73,6 +73,7 @@ button {
     transition: all 0.3s ease;
     margin-right: 8px;
     margin-bottom: 8px;
+    text-align: center;
 }
 
 button:hover {
