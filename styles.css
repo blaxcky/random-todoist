@@ -160,18 +160,24 @@ button:disabled:hover {
 
 .task-title-input {
     width: 100%;
-    padding: 8px 12px;
+    padding: 12px;
     border: 2px solid #e44332;
     border-radius: 8px;
-    font-size: 1.5rem;
+    font-size: 1.2rem;
     font-weight: 600;
     margin-bottom: 12px;
     background: white;
+    color: #333;
+    font-family: inherit;
+    resize: vertical;
+    min-height: 80px;
+    line-height: 1.4;
 }
 
 .task-title-input:focus {
     outline: none;
     border-color: #d63621;
+    box-shadow: 0 0 0 3px rgba(228, 67, 50, 0.1);
 }
 
 .btn-edit {

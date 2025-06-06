@@ -54,10 +54,12 @@ class TodoistApp {
             }
         });
         
-        document.getElementById('task-title-input').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
+        document.getElementById('task-title-input').addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && e.ctrlKey) {
+                e.preventDefault();
                 this.saveTitle();
             } else if (e.key === 'Escape') {
+                e.preventDefault();
                 this.cancelEditTitle();
             }
         });
