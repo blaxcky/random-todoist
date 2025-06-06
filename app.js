@@ -28,7 +28,14 @@ class TodoistApp {
         document.getElementById('edit-title').addEventListener('click', () => this.startEditTitle());
         document.getElementById('save-title').addEventListener('click', () => this.saveTitle());
         document.getElementById('cancel-edit').addEventListener('click', () => this.cancelEditTitle());
+        document.getElementById('menu-toggle').addEventListener('click', () => this.toggleMenu());
         document.getElementById('force-reload').addEventListener('click', () => this.forceReload());
+        
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.menu-container')) {
+                this.closeMenu();
+            }
+        });
         
         document.getElementById('api-key-input').addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
@@ -391,6 +398,16 @@ class TodoistApp {
             reloadButton.style.opacity = '1';
             this.showError(`Fehler beim Cache leeren: ${error.message}`);
         }
+    }
+
+    toggleMenu() {
+        const menu = document.getElementById('dropdown-menu');
+        const isVisible = menu.style.display === 'block';
+        menu.style.display = isVisible ? 'none' : 'block';
+    }
+
+    closeMenu() {
+        document.getElementById('dropdown-menu').style.display = 'none';
     }
 }
 

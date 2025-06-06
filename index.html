@@ -69,11 +69,11 @@
         </main>
         
         <footer class="footer">
-            <button id="force-reload" class="btn-force-reload">🔄 Cache leeren & Neu laden</button>
-            <div class="reload-info">
-                <p><strong>Android Force Reload:</strong></p>
-                <p>Chrome: Menü → Einstellungen → Datenschutz → Browserdaten löschen → Cache</p>
-                <p>Oder: PWA deinstallieren und neu installieren</p>
+            <div class="menu-container">
+                <button id="menu-toggle" class="btn-menu">⋮</button>
+                <div id="dropdown-menu" class="dropdown-menu" style="display: none;">
+                    <button id="force-reload" class="menu-item">🔄 Cache leeren & Neu laden</button>
+                </div>
             </div>
         </footer>
     </div>
