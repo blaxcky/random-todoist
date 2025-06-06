@@ -74,6 +74,10 @@ button {
     margin-right: 8px;
     margin-bottom: 8px;
     text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
 }
 
 button:hover {
