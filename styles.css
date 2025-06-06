@@ -126,7 +126,7 @@ button:disabled:hover {
     padding: 20px;
     border-radius: 16px 16px 0 0;
     margin-bottom: 0;
-    min-height: 120px;
+    height: 140px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -136,6 +136,9 @@ button:disabled:hover {
     background: white;
     padding: 20px;
     border-radius: 0 0 16px 16px;
+    min-height: 300px;
+    display: flex;
+    flex-direction: column;
 }
 
 .task-title-container {
@@ -218,23 +221,32 @@ button:disabled:hover {
     color: #666;
     margin-bottom: 16px;
     line-height: 1.6;
+    flex-shrink: 0;
+    min-height: 60px;
+    display: flex;
+    align-items: flex-start;
 }
 
 .task-meta {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 24px;
+    margin-bottom: 16px;
     padding: 12px;
     background: #f8f9fa;
     border-radius: 8px;
     font-size: 14px;
     color: #666;
+    flex-shrink: 0;
+    height: 48px;
+    align-items: center;
 }
 
 .task-actions {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
+    margin-top: auto;
+    padding-top: 16px;
 }
 
 .btn-complete {
