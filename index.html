@@ -31,26 +31,30 @@
                 <div id="loading" class="loading">Lade Aufgabe...</div>
                 
                 <div id="task-display" class="task-card" style="display: none;">
-                    <div class="task-title-container">
-                        <h2 id="task-title"></h2>
-                        <button id="edit-title" class="btn-edit">✏️</button>
-                    </div>
-                    <input type="text" id="task-title-input" class="task-title-input" style="display: none;">
-                    <div class="edit-actions" style="display: none;">
-                        <button id="save-title" class="btn-save">💾 Speichern</button>
-                        <button id="cancel-edit" class="btn-cancel">❌ Abbrechen</button>
-                    </div>
-                    
-                    <p id="task-description"></p>
-                    <div class="task-meta">
-                        <span id="task-project"></span>
-                        <span id="task-due-date"></span>
+                    <div class="task-title-block">
+                        <div class="task-title-container">
+                            <h2 id="task-title"></h2>
+                            <button id="edit-title" class="btn-edit">✏️</button>
+                        </div>
+                        <input type="text" id="task-title-input" class="task-title-input" style="display: none;">
+                        <div class="edit-actions" style="display: none;">
+                            <button id="save-title" class="btn-save">💾 Speichern</button>
+                            <button id="cancel-edit" class="btn-cancel">❌ Abbrechen</button>
+                        </div>
                     </div>
                     
-                    <div class="task-actions">
-                        <button id="complete-task" class="btn-complete">✓ Erledigt</button>
-                        <button id="postpone-task" class="btn-postpone">⌛ Verschieben</button>
-                        <button id="next-task" class="btn-next">➡️ Nächste Aufgabe</button>
+                    <div class="task-details-block">
+                        <p id="task-description"></p>
+                        <div class="task-meta">
+                            <span id="task-project"></span>
+                            <span id="task-due-date"></span>
+                        </div>
+                        
+                        <div class="task-actions">
+                            <button id="complete-task" class="btn-complete">✓ Erledigt</button>
+                            <button id="postpone-task" class="btn-postpone">⌛ Verschieben</button>
+                            <button id="next-task" class="btn-next">➡️ Nächste Aufgabe</button>
+                        </div>
                     </div>
                 </div>
                 

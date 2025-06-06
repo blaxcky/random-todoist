@@ -117,6 +117,21 @@ button:disabled:hover {
 
 .task-card {
     text-align: left;
+    padding: 0;
+}
+
+.task-title-block {
+    background: linear-gradient(135deg, #e44332 0%, #d63621 100%);
+    color: white;
+    padding: 20px;
+    border-radius: 16px 16px 0 0;
+    margin-bottom: 0;
+}
+
+.task-details-block {
+    background: white;
+    padding: 20px;
+    border-radius: 0 0 16px 16px;
 }
 
 .task-title-container {
@@ -129,10 +144,11 @@ button:disabled:hover {
 #task-title {
     font-size: 1.5rem;
     font-weight: 600;
-    color: #333;
+    color: white;
     line-height: 1.4;
     flex: 1;
     margin: 0;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
 }
 
 .task-title-input {
@@ -152,19 +168,21 @@ button:disabled:hover {
 }
 
 .btn-edit {
-    background: #6c757d;
+    background: rgba(255,255,255,0.2);
     color: white;
-    border: none;
+    border: 1px solid rgba(255,255,255,0.3);
     padding: 8px 12px;
     border-radius: 6px;
     font-size: 14px;
     cursor: pointer;
     min-width: auto;
     margin: 0;
+    backdrop-filter: blur(10px);
 }
 
 .btn-edit:hover {
-    background: #5a6268;
+    background: rgba(255,255,255,0.3);
+    border-color: rgba(255,255,255,0.5);
     transform: translateY(-1px);
 }
 
