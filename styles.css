@@ -410,3 +410,24 @@ button:disabled:hover {
     transform: none;
     box-shadow: none;
 }
+
+.task-link {
+    color: #e44332;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.task-link:hover {
+    color: #d63621;
+    text-decoration: underline;
+}
+
+.task-title-block .task-link {
+    color: rgba(255,255,255,0.9);
+    text-decoration: underline;
+}
+
+.task-title-block .task-link:hover {
+    color: white;
+}

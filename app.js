@@ -149,8 +149,8 @@ class TodoistApp {
         document.getElementById('error-message').style.display = 'none';
         document.getElementById('task-display').style.display = 'block';
 
-        document.getElementById('task-title').textContent = task.content;
-        document.getElementById('task-description').textContent = task.description || '';
+        document.getElementById('task-title').innerHTML = this.formatLinks(task.content);
+        document.getElementById('task-description').innerHTML = this.formatLinks(task.description || '');
         
         let projectName = '';
         if (task.project_id) {
@@ -173,6 +173,20 @@ class TodoistApp {
         
         const dueDate = task.due ? new Date(task.due.date).toLocaleDateString('de-DE') : 'Kein Fälligkeitsdatum';
         document.getElementById('task-due-date').textContent = dueDate;
+    }
+
+    formatLinks(text) {
+        if (!text) return '';
+        
+        // Todoist-Style Links: [Text](URL)
+        const todoistLinkRegex = /\[([^\]]+)\]\(([^)]+)\)/g;
+        text = text.replace(todoistLinkRegex, '<a href="$2" target="_blank" rel="noopener noreferrer" class="task-link">$1</a>');
+        
+        // Normale URLs automatisch verlinken
+        const urlRegex = /(^|[^"'])(https?:\/\/[^\s]+)/g;
+        text = text.replace(urlRegex, '$1<a href="$2" target="_blank" rel="noopener noreferrer" class="task-link">$2</a>');
+        
+        return text;
     }
 
     async completeTask() {
