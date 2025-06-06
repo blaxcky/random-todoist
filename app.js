@@ -28,6 +28,7 @@ class TodoistApp {
         document.getElementById('edit-title').addEventListener('click', () => this.startEditTitle());
         document.getElementById('save-title').addEventListener('click', () => this.saveTitle());
         document.getElementById('cancel-edit').addEventListener('click', () => this.cancelEditTitle());
+        document.getElementById('force-reload').addEventListener('click', () => this.forceReload());
         
         document.getElementById('api-key-input').addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
@@ -349,6 +350,42 @@ class TodoistApp {
         titleContainer.style.display = 'flex';
         inputElement.style.display = 'none';
         editActions.style.display = 'none';
+    }
+
+    async forceReload() {
+        const reloadButton = document.getElementById('force-reload');
+        const originalText = reloadButton.textContent;
+        
+        reloadButton.disabled = true;
+        reloadButton.textContent = '🔄 Cache wird geleert...';
+        reloadButton.style.opacity = '0.7';
+
+        try {
+            if ('serviceWorker' in navigator) {
+                const registrations = await navigator.serviceWorker.getRegistrations();
+                for (let registration of registrations) {
+                    await registration.unregister();
+                }
+            }
+
+            if ('caches' in window) {
+                const cacheNames = await caches.keys();
+                await Promise.all(
+                    cacheNames.map(cacheName => caches.delete(cacheName))
+                );
+            }
+
+            setTimeout(() => {
+                window.location.reload(true);
+            }, 500);
+
+        } catch (error) {
+            console.error('Fehler beim Cache leeren:', error);
+            reloadButton.disabled = false;
+            reloadButton.textContent = originalText;
+            reloadButton.style.opacity = '1';
+            this.showError(`Fehler beim Cache leeren: ${error.message}`);
+        }
     }
 }
 
