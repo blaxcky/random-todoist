@@ -126,6 +126,10 @@ button:disabled:hover {
     padding: 20px;
     border-radius: 16px 16px 0 0;
     margin-bottom: 0;
+    min-height: 120px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .task-details-block {

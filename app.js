@@ -167,7 +167,12 @@ class TodoistApp {
         document.getElementById('error-message').style.display = 'none';
         document.getElementById('task-display').style.display = 'block';
 
-        document.getElementById('task-title').innerHTML = this.formatLinks(task.content);
+        const titleElement = document.getElementById('task-title');
+        titleElement.innerHTML = this.formatLinks(task.content);
+        
+        // Dynamische Schriftgröße basierend auf Titellänge
+        this.adjustTitleSize(titleElement, task.content);
+        
         document.getElementById('task-description').innerHTML = this.formatLinks(task.description || '');
         
         let projectName = '';
@@ -379,6 +384,7 @@ class TodoistApp {
             }
 
             document.getElementById('task-title').textContent = newTitle;
+            this.adjustTitleSize(document.getElementById('task-title'), newTitle);
             this.cancelEditTitle();
 
         } catch (error) {
@@ -451,6 +457,28 @@ class TodoistApp {
 
     closeMenu() {
         document.getElementById('dropdown-menu').style.display = 'none';
+    }
+
+    adjustTitleSize(titleElement, content) {
+        // Entferne HTML-Tags für Längenberechnung
+        const textContent = content.replace(/<[^>]*>/g, '');
+        const length = textContent.length;
+        
+        // Bestimme Schriftgröße basierend auf Länge
+        let fontSize = '1.5rem'; // Standard
+        
+        if (length > 100) {
+            fontSize = '1.1rem';
+        } else if (length > 70) {
+            fontSize = '1.2rem';
+        } else if (length > 50) {
+            fontSize = '1.3rem';
+        } else if (length > 30) {
+            fontSize = '1.4rem';
+        }
+        
+        titleElement.style.fontSize = fontSize;
+        titleElement.style.lineHeight = length > 50 ? '1.3' : '1.4';
     }
 }
 
