@@ -90,6 +90,16 @@ button:active {
     transform: translateY(0);
 }
 
+button:disabled {
+    cursor: not-allowed;
+    transform: none !important;
+}
+
+button:disabled:hover {
+    transform: none !important;
+    box-shadow: none !important;
+}
+
 #change-api-key {
     background: #6c757d;
 }

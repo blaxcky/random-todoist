@@ -159,6 +159,13 @@ class TodoistApp {
     async completeTask() {
         if (!this.currentTask) return;
 
+        const completeButton = document.getElementById('complete-task');
+        const originalText = completeButton.textContent;
+        
+        completeButton.disabled = true;
+        completeButton.textContent = '⏳ Wird erledigt...';
+        completeButton.style.opacity = '0.7';
+
         try {
             const response = await fetch(`https://api.todoist.com/rest/v2/tasks/${this.currentTask.id}/close`, {
                 method: 'POST',
@@ -182,11 +189,22 @@ class TodoistApp {
         } catch (error) {
             console.error('Fehler beim Abschließen der Aufgabe:', error);
             this.showError(`Fehler beim Abschließen der Aufgabe: ${error.message}`);
+            
+            completeButton.disabled = false;
+            completeButton.textContent = originalText;
+            completeButton.style.opacity = '1';
         }
     }
 
     async postponeTask() {
         if (!this.currentTask) return;
+
+        const postponeButton = document.getElementById('postpone-task');
+        const originalText = postponeButton.textContent;
+        
+        postponeButton.disabled = true;
+        postponeButton.textContent = '⏳ Wird verschoben...';
+        postponeButton.style.opacity = '0.7';
 
         const tomorrow = new Date();
         tomorrow.setDate(tomorrow.getDate() + 1);
@@ -219,6 +237,10 @@ class TodoistApp {
         } catch (error) {
             console.error('Fehler beim Verschieben der Aufgabe:', error);
             this.showError(`Fehler beim Verschieben der Aufgabe: ${error.message}`);
+            
+            postponeButton.disabled = false;
+            postponeButton.textContent = originalText;
+            postponeButton.style.opacity = '1';
         }
     }
 
@@ -263,6 +285,7 @@ class TodoistApp {
 
     async saveTitle() {
         const inputElement = document.getElementById('task-title-input');
+        const saveButton = document.getElementById('save-title');
         const newTitle = inputElement.value.trim();
         
         if (!newTitle) {
@@ -274,6 +297,12 @@ class TodoistApp {
             this.showError('Keine Aufgabe zum Bearbeiten gefunden.');
             return;
         }
+
+        const originalText = saveButton.textContent;
+        saveButton.disabled = true;
+        saveButton.textContent = '⏳ Speichert...';
+        saveButton.style.opacity = '0.7';
+        inputElement.disabled = true;
 
         try {
             const response = await fetch(`https://api.todoist.com/rest/v2/tasks/${this.currentTask.id}`, {
@@ -304,6 +333,11 @@ class TodoistApp {
         } catch (error) {
             console.error('Fehler beim Speichern des Titels:', error);
             this.showError(`Fehler beim Speichern des Titels: ${error.message}`);
+            
+            saveButton.disabled = false;
+            saveButton.textContent = originalText;
+            saveButton.style.opacity = '1';
+            inputElement.disabled = false;
         }
     }
 
