@@ -1,10 +1,11 @@
 const CACHE_NAME = 'random-todoist-v1';
 const urlsToCache = [
-    '/',
-    '/index.html',
-    '/styles.css',
-    '/app.js',
-    '/manifest.json'
+    './',
+    './index.html',
+    './styles.css',
+    './app.js',
+    './manifest.json',
+    './icon.svg'
 ];
 
 self.addEventListener('install', event => {
