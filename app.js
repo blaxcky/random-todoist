@@ -333,11 +333,11 @@ class TodoistApp {
     }
 
     openEditPopup() {
-        const titleElement = document.getElementById('task-title');
         const inputElement = document.getElementById('task-title-input');
         const popup = document.getElementById('edit-popup');
 
-        inputElement.value = titleElement.textContent;
+        // Verwende den originalen Titel mit Markdown-Formatierung
+        inputElement.value = this.currentTask ? this.currentTask.content : '';
         popup.style.display = 'flex';
         
         // Focus textarea after animation
@@ -396,7 +396,7 @@ class TodoistApp {
                 taskInList.content = newTitle;
             }
 
-            document.getElementById('task-title').textContent = newTitle;
+            document.getElementById('task-title').innerHTML = this.formatLinks(newTitle);
             this.adjustTitleSize(document.getElementById('task-title'), newTitle);
             this.closeEditPopup();
 
