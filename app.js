@@ -441,10 +441,48 @@ if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('./sw.js')
             .then(registration => {
                 console.log('SW registered: ', registration);
+                
+                // Check for updates
+                registration.addEventListener('updatefound', () => {
+                    const newWorker = registration.installing;
+                    console.log('New service worker found');
+                    
+                    newWorker.addEventListener('statechange', () => {
+                        if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                            // New update available
+                            console.log('New content available, will refresh automatically');
+                            
+                            // Show update notification (optional)
+                            if ('Notification' in window && Notification.permission === 'granted') {
+                                new Notification('App Update', {
+                                    body: 'Eine neue Version ist verfügbar und wird geladen...',
+                                    icon: './icon.svg'
+                                });
+                            }
+                            
+                            // Auto-refresh after short delay
+                            setTimeout(() => {
+                                window.location.reload();
+                            }, 1000);
+                        }
+                    });
+                });
+                
+                // Check for updates periodically (every 5 minutes)
+                setInterval(() => {
+                    registration.update();
+                }, 5 * 60 * 1000);
+                
             })
             .catch(registrationError => {
                 console.log('SW registration failed: ', registrationError);
             });
+            
+        // Handle controller changes
+        navigator.serviceWorker.addEventListener('controllerchange', () => {
+            console.log('Service worker controller changed');
+            window.location.reload();
+        });
     });
 }
 
