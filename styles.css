@@ -1,0 +1,247 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    color: #333;
+}
+
+.container {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 20px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+header h1 {
+    color: white;
+    font-size: 2rem;
+    font-weight: 600;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+.section {
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+}
+
+.section h2 {
+    margin-bottom: 16px;
+    color: #333;
+    font-size: 1.4rem;
+}
+
+#api-key-input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid #e1e5e9;
+    border-radius: 8px;
+    font-size: 16px;
+    margin-bottom: 12px;
+    transition: border-color 0.3s ease;
+}
+
+#api-key-input:focus {
+    outline: none;
+    border-color: #e44332;
+}
+
+button {
+    background: #e44332;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-right: 8px;
+    margin-bottom: 8px;
+}
+
+button:hover {
+    background: #d63621;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(228, 67, 50, 0.3);
+}
+
+button:active {
+    transform: translateY(0);
+}
+
+#change-api-key {
+    background: #6c757d;
+}
+
+#change-api-key:hover {
+    background: #5a6268;
+}
+
+.loading {
+    text-align: center;
+    padding: 40px 20px;
+    color: #666;
+    font-size: 18px;
+}
+
+.task-card {
+    text-align: left;
+}
+
+#task-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: #333;
+    line-height: 1.4;
+}
+
+#task-description {
+    color: #666;
+    margin-bottom: 16px;
+    line-height: 1.6;
+}
+
+.task-meta {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    padding: 12px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    font-size: 14px;
+    color: #666;
+}
+
+.task-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.btn-complete {
+    background: #28a745;
+    flex: 1;
+    min-width: 120px;
+}
+
+.btn-complete:hover {
+    background: #218838;
+    box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+}
+
+.btn-postpone {
+    background: #ffc107;
+    color: #333;
+    flex: 1;
+    min-width: 120px;
+}
+
+.btn-postpone:hover {
+    background: #e0a800;
+    box-shadow: 0 4px 12px rgba(255, 193, 7, 0.3);
+}
+
+.btn-next {
+    background: #17a2b8;
+    flex: 1;
+    min-width: 120px;
+}
+
+.btn-next:hover {
+    background: #138496;
+    box-shadow: 0 4px 12px rgba(23, 162, 184, 0.3);
+}
+
+.btn-refresh {
+    background: #6c757d;
+    width: 100%;
+}
+
+.btn-refresh:hover {
+    background: #5a6268;
+}
+
+.no-tasks {
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.no-tasks h3 {
+    color: #28a745;
+    margin-bottom: 12px;
+    font-size: 1.5rem;
+}
+
+.no-tasks p {
+    color: #666;
+    margin-bottom: 24px;
+}
+
+.error {
+    background: #f8d7da;
+    color: #721c24;
+    padding: 16px;
+    border-radius: 8px;
+    border: 1px solid #f5c6cb;
+    margin-top: 16px;
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 16px;
+    }
+    
+    header h1 {
+        font-size: 1.8rem;
+    }
+    
+    .section {
+        padding: 20px;
+    }
+    
+    .task-actions {
+        flex-direction: column;
+    }
+    
+    .task-actions button {
+        margin-right: 0;
+        width: 100%;
+    }
+    
+    .task-meta {
+        flex-direction: column;
+        gap: 8px;
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.task-card {
+    animation: fadeIn 0.5s ease-out;
+}
