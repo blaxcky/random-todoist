@@ -16,6 +16,18 @@ class TodoistApp {
         } else {
             this.showApiKeySection();
         }
+        
+        // Menu-Button Event nach DOM-Load
+        setTimeout(() => {
+            const menuButton = document.getElementById('menu-toggle');
+            if (menuButton) {
+                menuButton.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    this.toggleMenu();
+                });
+            }
+        }, 100);
     }
 
     bindEvents() {
@@ -28,7 +40,6 @@ class TodoistApp {
         document.getElementById('edit-title').addEventListener('click', () => this.startEditTitle());
         document.getElementById('save-title').addEventListener('click', () => this.saveTitle());
         document.getElementById('cancel-edit').addEventListener('click', () => this.cancelEditTitle());
-        document.getElementById('menu-toggle').addEventListener('click', () => this.toggleMenu());
         document.getElementById('force-reload').addEventListener('click', () => this.forceReload());
         
         document.addEventListener('click', (e) => {
