@@ -31,7 +31,16 @@
                 <div id="loading" class="loading">Lade Aufgabe...</div>
                 
                 <div id="task-display" class="task-card" style="display: none;">
-                    <h2 id="task-title"></h2>
+                    <div class="task-title-container">
+                        <h2 id="task-title"></h2>
+                        <button id="edit-title" class="btn-edit">✏️</button>
+                    </div>
+                    <input type="text" id="task-title-input" class="task-title-input" style="display: none;">
+                    <div class="edit-actions" style="display: none;">
+                        <button id="save-title" class="btn-save">💾 Speichern</button>
+                        <button id="cancel-edit" class="btn-cancel">❌ Abbrechen</button>
+                    </div>
+                    
                     <p id="task-description"></p>
                     <div class="task-meta">
                         <span id="task-project"></span>

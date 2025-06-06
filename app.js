@@ -25,10 +25,21 @@ class TodoistApp {
         document.getElementById('postpone-task').addEventListener('click', () => this.postponeTask());
         document.getElementById('next-task').addEventListener('click', () => this.loadRandomTask());
         document.getElementById('refresh-tasks').addEventListener('click', () => this.loadTasks());
+        document.getElementById('edit-title').addEventListener('click', () => this.startEditTitle());
+        document.getElementById('save-title').addEventListener('click', () => this.saveTitle());
+        document.getElementById('cancel-edit').addEventListener('click', () => this.cancelEditTitle());
         
         document.getElementById('api-key-input').addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
                 this.saveApiKey();
+            }
+        });
+        
+        document.getElementById('task-title-input').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                this.saveTitle();
+            } else if (e.key === 'Escape') {
+                this.cancelEditTitle();
             }
         });
     }
@@ -231,6 +242,79 @@ class TodoistApp {
         document.getElementById('no-tasks').style.display = 'none';
         document.getElementById('error-message').style.display = 'block';
         document.getElementById('error-message').textContent = message;
+    }
+
+    startEditTitle() {
+        const titleElement = document.getElementById('task-title');
+        const inputElement = document.getElementById('task-title-input');
+        const editButton = document.getElementById('edit-title');
+        const editActions = document.querySelector('.edit-actions');
+        const titleContainer = document.querySelector('.task-title-container');
+
+        inputElement.value = titleElement.textContent;
+        
+        titleContainer.style.display = 'none';
+        inputElement.style.display = 'block';
+        editActions.style.display = 'flex';
+        
+        inputElement.focus();
+        inputElement.select();
+    }
+
+    async saveTitle() {
+        const inputElement = document.getElementById('task-title-input');
+        const newTitle = inputElement.value.trim();
+        
+        if (!newTitle) {
+            this.showError('Der Titel darf nicht leer sein.');
+            return;
+        }
+
+        if (!this.currentTask) {
+            this.showError('Keine Aufgabe zum Bearbeiten gefunden.');
+            return;
+        }
+
+        try {
+            const response = await fetch(`https://api.todoist.com/rest/v2/tasks/${this.currentTask.id}`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${this.apiKey}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    content: newTitle
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
+
+            this.currentTask.content = newTitle;
+            
+            const taskInList = this.tasks.find(task => task.id === this.currentTask.id);
+            if (taskInList) {
+                taskInList.content = newTitle;
+            }
+
+            document.getElementById('task-title').textContent = newTitle;
+            this.cancelEditTitle();
+
+        } catch (error) {
+            console.error('Fehler beim Speichern des Titels:', error);
+            this.showError(`Fehler beim Speichern des Titels: ${error.message}`);
+        }
+    }
+
+    cancelEditTitle() {
+        const titleContainer = document.querySelector('.task-title-container');
+        const inputElement = document.getElementById('task-title-input');
+        const editActions = document.querySelector('.edit-actions');
+
+        titleContainer.style.display = 'flex';
+        inputElement.style.display = 'none';
+        editActions.style.display = 'none';
     }
 }
 

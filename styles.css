@@ -109,12 +109,77 @@ button:active {
     text-align: left;
 }
 
+.task-title-container {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
 #task-title {
     font-size: 1.5rem;
     font-weight: 600;
-    margin-bottom: 12px;
     color: #333;
     line-height: 1.4;
+    flex: 1;
+    margin: 0;
+}
+
+.task-title-input {
+    width: 100%;
+    padding: 8px 12px;
+    border: 2px solid #e44332;
+    border-radius: 8px;
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 12px;
+    background: white;
+}
+
+.task-title-input:focus {
+    outline: none;
+    border-color: #d63621;
+}
+
+.btn-edit {
+    background: #6c757d;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    min-width: auto;
+    margin: 0;
+}
+
+.btn-edit:hover {
+    background: #5a6268;
+    transform: translateY(-1px);
+}
+
+.edit-actions {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.btn-save {
+    background: #28a745;
+    flex: 1;
+}
+
+.btn-save:hover {
+    background: #218838;
+}
+
+.btn-cancel {
+    background: #dc3545;
+    flex: 1;
+}
+
+.btn-cancel:hover {
+    background: #c82333;
 }
 
 #task-description {
