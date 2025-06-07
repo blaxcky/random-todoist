@@ -619,4 +619,17 @@ button:disabled:hover {
     color: #666;
     font-size: 1.1rem;
     line-height: 1.5;
+    margin-bottom: 20px;
+}
+
+.btn-start {
+    background: #667eea;
+    color: white;
+    font-size: 1.1rem;
+    padding: 12px 24px;
+}
+
+.btn-start:hover {
+    background: #5a6fd8;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
 }

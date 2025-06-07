@@ -121,8 +121,14 @@ class TodoistApp {
                 startMessage = document.createElement('div');
                 startMessage.id = 'start-message';
                 startMessage.className = 'start-message';
-                startMessage.innerHTML = '<p>Klicke auf "Nächste Aufgabe" um eine zufällige überfällige Aufgabe zu laden.</p>';
+                startMessage.innerHTML = `
+                    <p>Bereit für eine zufällige überfällige Aufgabe?</p>
+                    <button id="start-button" class="btn btn-start">Erste Aufgabe laden</button>
+                `;
                 taskSection.appendChild(startMessage);
+                
+                // Add event listener for start button
+                document.getElementById('start-button').addEventListener('click', () => this.loadRandomTask());
             }
             
             startMessage.style.display = 'block';
