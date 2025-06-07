@@ -15,8 +15,13 @@ class TodoistApp {
         
         if (this.apiKey) {
             this.showTaskSection();
-            if (this.currentTask && this.allOverdueTasks.length > 0) {
+            if (this.currentTask) {
+                // If we have a saved current task, show it but don't mark as "seen" yet
                 this.displayTask(this.currentTask);
+                // Also preload tasks if not cached
+                if (this.allOverdueTasks.length === 0) {
+                    this.loadTasks();
+                }
             } else {
                 // Preload tasks when app starts
                 this.loadTasks();
@@ -242,7 +247,8 @@ class TodoistApp {
             if (this.tasks.length === 0) {
                 this.showNoTasks();
             } else {
-                this.loadRandomTask();
+                // Don't mark as shown on first load
+                this.loadRandomTask(false);
             }
 
         } catch (error) {
@@ -251,7 +257,7 @@ class TodoistApp {
         }
     }
 
-    async loadRandomTask() {
+    async loadRandomTask(markCurrentAsShown = true) {
         // Hide start message if it exists
         const startMessage = document.getElementById('start-message');
         if (startMessage) {
@@ -270,8 +276,8 @@ class TodoistApp {
             return;
         }
 
-        // Mark current task as shown if we have one
-        if (this.currentTask) {
+        // Mark current task as shown only if explicitly requested (not on first load)
+        if (this.currentTask && markCurrentAsShown) {
             this.shownTaskIds.add(this.currentTask.id);
             this.saveShownTaskIds();
         }
@@ -338,8 +344,8 @@ class TodoistApp {
             restartMessage.style.display = 'none';
         }
         
-        // Load random task to start new cycle
-        this.loadRandomTask();
+        // Load random task to start new cycle (don't mark as shown yet)
+        this.loadRandomTask(false);
     }
 
     async refreshAndRestart() {
@@ -405,8 +411,8 @@ class TodoistApp {
         
         const totalTasks = this.allOverdueTasks.length;
         const shownTasks = this.shownTaskIds.size;
-        const currentTaskCount = this.currentTask ? 1 : 0;
-        const effectiveShownCount = Math.min(shownTasks + currentTaskCount, totalTasks);
+        // Don't count current task as shown yet - it's being shown right now
+        const effectiveShownCount = shownTasks;
         
         // Update or create progress indicator
         let progressContainer = document.getElementById('task-progress');
