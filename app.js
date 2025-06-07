@@ -476,8 +476,8 @@ class TodoistApp {
         
         const totalTasks = this.allOverdueTasks.length;
         const shownTasks = this.shownTaskIds.size;
-        // Don't count current task as shown yet - it's being shown right now
-        const effectiveShownCount = shownTasks;
+        // Count current task as being worked on (1-based counting)
+        const effectiveShownCount = this.currentTask ? shownTasks + 1 : shownTasks;
         
         // Update or create progress indicator
         let progressContainer = document.getElementById('task-progress');
