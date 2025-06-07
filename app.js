@@ -3,6 +3,7 @@ class TodoistApp {
         this.apiKey = null;
         this.tasks = [];
         this.currentTask = null;
+        this.isLoadingTasks = false;
         this.init();
     }
 
@@ -21,17 +22,23 @@ class TodoistApp {
             this.showApiKeySection();
         }
         
-        // Menu-Button Event nach DOM-Load
-        setTimeout(() => {
-            const menuButton = document.getElementById('menu-toggle');
-            if (menuButton) {
-                menuButton.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    this.toggleMenu();
-                });
-            }
-        }, 100);
+        // Menu-Button Event binding with proper DOM checking
+        this.bindMenuButton();
+    }
+
+    bindMenuButton() {
+        const menuButton = document.getElementById('menu-toggle');
+        if (menuButton && !menuButton.hasAttribute('data-bound')) {
+            menuButton.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                this.toggleMenu();
+            });
+            menuButton.setAttribute('data-bound', 'true');
+        } else if (!menuButton) {
+            // Retry if element not found yet
+            setTimeout(() => this.bindMenuButton(), 50);
+        }
     }
 
     bindEvents() {
@@ -112,6 +119,12 @@ class TodoistApp {
             this.showError('Bitte gib einen API-Key ein.');
             return;
         }
+        
+        // Basic API key validation
+        if (key.length < 32 || !/^[a-f0-9]+$/i.test(key)) {
+            this.showError('API-Key scheint ungültig zu sein. Erwartet: 32+ hexadezimale Zeichen.');
+            return;
+        }
 
         this.apiKey = key;
         localStorage.setItem('todoist-api-key', key);
@@ -154,8 +167,12 @@ class TodoistApp {
                 `;
                 taskSection.appendChild(startMessage);
                 
-                // Add event listener for start button
-                document.getElementById('start-button').addEventListener('click', () => this.loadRandomTask());
+                // Add event listener for start button (prevent memory leaks)
+                const startButton = document.getElementById('start-button');
+                if (startButton && !startButton.hasAttribute('data-bound')) {
+                    startButton.addEventListener('click', () => this.loadRandomTask());
+                    startButton.setAttribute('data-bound', 'true');
+                }
             }
             
             startMessage.style.display = 'block';
@@ -182,8 +199,17 @@ class TodoistApp {
             this.tasks = allTasks.filter(task => {
                 if (!task.due) return false;
                 
-                const dueDate = new Date(task.due.date);
-                return dueDate <= now;
+                try {
+                    const dueDate = new Date(task.due.date);
+                    if (isNaN(dueDate.getTime())) {
+                        console.warn('Invalid due date for task:', task.id, task.due.date);
+                        return false;
+                    }
+                    return dueDate <= now;
+                } catch (error) {
+                    console.error('Error parsing due date for task:', task.id, error);
+                    return false;
+                }
             });
 
             if (this.tasks.length === 0) {
@@ -205,9 +231,15 @@ class TodoistApp {
             startMessage.style.display = 'none';
         }
         
-        // Load tasks if not loaded yet
+        // Load tasks if not loaded yet (prevent race conditions)
         if (this.tasks.length === 0) {
-            await this.loadTasks();
+            if (this.isLoadingTasks) return;
+            this.isLoadingTasks = true;
+            try {
+                await this.loadTasks();
+            } finally {
+                this.isLoadingTasks = false;
+            }
             return;
         }
 
@@ -301,9 +333,22 @@ class TodoistApp {
         const todoistLinkRegex = /\[([^\]]+)\]\(([^)]+)\)/g;
         text = text.replace(todoistLinkRegex, '<a href="$2" target="_blank" rel="noopener noreferrer" class="task-link">$1</a>');
         
-        // Normale URLs automatisch verlinken
+        // Normale URLs automatisch verlinken (mit Validierung gegen XSS)
         const urlRegex = /(^|[^"'])(https?:\/\/[^\s]+)/g;
-        text = text.replace(urlRegex, '$1<a href="$2" target="_blank" rel="noopener noreferrer" class="task-link">$2</a>');
+        text = text.replace(urlRegex, (match, prefix, url) => {
+            try {
+                // Validate URL to prevent XSS attacks
+                new URL(url);
+                // Escape HTML characters in URL
+                const safeUrl = url.replace(/[<>"']/g, (char) => {
+                    const escapeMap = { '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#x27;' };
+                    return escapeMap[char];
+                });
+                return `${prefix}<a href="${safeUrl}" target="_blank" rel="noopener noreferrer" class="task-link">${safeUrl}</a>`;
+            } catch {
+                return match; // Return original if URL is invalid
+            }
+        });
         
         return text;
     }
@@ -648,10 +693,13 @@ if ('serviceWorker' in navigator) {
                                 });
                             }
                             
-                            // Auto-refresh after short delay
-                            setTimeout(() => {
-                                window.location.reload();
-                            }, 1000);
+                            // Auto-refresh after short delay (prevent infinite loops)
+                            if (!sessionStorage.getItem('sw-updating')) {
+                                sessionStorage.setItem('sw-updating', 'true');
+                                setTimeout(() => {
+                                    window.location.reload();
+                                }, 1000);
+                            }
                         }
                     });
                 });
