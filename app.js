@@ -61,6 +61,7 @@ class TodoistApp {
         document.getElementById('save-title').addEventListener('click', () => this.saveTitle());
         document.getElementById('cancel-edit').addEventListener('click', () => this.closeEditPopup());
         document.getElementById('close-popup').addEventListener('click', () => this.closeEditPopup());
+        document.getElementById('reset-cycle').addEventListener('click', () => this.resetCycleFromMenu());
         document.getElementById('force-reload').addEventListener('click', () => this.forceReload());
         
         document.addEventListener('click', (e) => {
@@ -403,6 +404,28 @@ class TodoistApp {
         
         // Reload all tasks and start fresh
         await this.loadTasks();
+    }
+
+    resetCycleFromMenu() {
+        // Close the menu first
+        this.closeMenu();
+        
+        // Clear shown task IDs to start cycle from beginning
+        this.shownTaskIds.clear();
+        this.saveShownTaskIds();
+        
+        // Clear current task
+        this.clearCurrentTask();
+        
+        // Hide any restart message that might be showing
+        const restartMessage = document.getElementById('restart-cycle-message');
+        if (restartMessage) {
+            restartMessage.style.display = 'none';
+        }
+        
+        // Show loading and reload all tasks fresh
+        this.showLoading();
+        this.loadTasks();
     }
 
     async displayTask(task) {
