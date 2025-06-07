@@ -606,3 +606,17 @@ button:disabled:hover {
 .task-title-block .task-link:hover {
     color: white;
 }
+
+.start-message {
+    text-align: center;
+    padding: 40px 20px;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+.start-message p {
+    color: #666;
+    font-size: 1.1rem;
+    line-height: 1.5;
+}

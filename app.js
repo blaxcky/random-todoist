@@ -12,7 +12,7 @@ class TodoistApp {
         
         if (this.apiKey) {
             this.showTaskSection();
-            this.loadTasks();
+            this.showStartState();
         } else {
             this.showApiKeySection();
         }
@@ -106,6 +106,29 @@ class TodoistApp {
         document.getElementById('task-section').style.display = 'block';
     }
 
+    showStartState() {
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('task-display').style.display = 'none';
+        document.getElementById('no-tasks').style.display = 'none';
+        document.getElementById('error-message').style.display = 'none';
+        
+        // Show a start message if no tasks are loaded yet
+        if (this.tasks.length === 0 && !this.currentTask) {
+            const taskSection = document.getElementById('task-section');
+            let startMessage = document.getElementById('start-message');
+            
+            if (!startMessage) {
+                startMessage = document.createElement('div');
+                startMessage.id = 'start-message';
+                startMessage.className = 'start-message';
+                startMessage.innerHTML = '<p>Klicke auf "Nächste Aufgabe" um eine zufällige überfällige Aufgabe zu laden.</p>';
+                taskSection.appendChild(startMessage);
+            }
+            
+            startMessage.style.display = 'block';
+        }
+    }
+
     async loadTasks() {
         this.showLoading();
         
@@ -142,9 +165,16 @@ class TodoistApp {
         }
     }
 
-    loadRandomTask() {
+    async loadRandomTask() {
+        // Hide start message if it exists
+        const startMessage = document.getElementById('start-message');
+        if (startMessage) {
+            startMessage.style.display = 'none';
+        }
+        
+        // Load tasks if not loaded yet
         if (this.tasks.length === 0) {
-            this.showNoTasks();
+            await this.loadTasks();
             return;
         }
 
