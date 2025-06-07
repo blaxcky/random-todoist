@@ -4,6 +4,8 @@ class TodoistApp {
         this.tasks = [];
         this.currentTask = null;
         this.isLoadingTasks = false;
+        this.shownTaskIds = new Set(); // Track which tasks have been shown
+        this.allOverdueTasks = []; // Cache all overdue tasks
         this.init();
     }
 
@@ -13,10 +15,11 @@ class TodoistApp {
         
         if (this.apiKey) {
             this.showTaskSection();
-            if (this.currentTask) {
+            if (this.currentTask && this.allOverdueTasks.length > 0) {
                 this.displayTask(this.currentTask);
             } else {
-                this.showStartState();
+                // Preload tasks when app starts
+                this.loadTasks();
             }
         } else {
             this.showApiKeySection();
@@ -98,12 +101,28 @@ class TodoistApp {
                 localStorage.removeItem('current-task');
             }
         }
+        
+        // Load saved shown task IDs
+        const savedShownIds = localStorage.getItem('shown-task-ids');
+        if (savedShownIds) {
+            try {
+                this.shownTaskIds = new Set(JSON.parse(savedShownIds));
+            } catch (error) {
+                console.error('Fehler beim Laden der gezeigten Aufgaben:', error);
+                localStorage.removeItem('shown-task-ids');
+                this.shownTaskIds = new Set();
+            }
+        }
     }
 
     saveCurrentTask() {
         if (this.currentTask) {
             localStorage.setItem('current-task', JSON.stringify(this.currentTask));
         }
+    }
+    
+    saveShownTaskIds() {
+        localStorage.setItem('shown-task-ids', JSON.stringify([...this.shownTaskIds]));
     }
 
     clearCurrentTask() {
@@ -196,7 +215,7 @@ class TodoistApp {
             const allTasks = await response.json();
             
             const now = new Date();
-            this.tasks = allTasks.filter(task => {
+            const overdueTasks = allTasks.filter(task => {
                 if (!task.due) return false;
                 
                 try {
@@ -211,6 +230,14 @@ class TodoistApp {
                     return false;
                 }
             });
+            
+            // Cache all overdue tasks for cycling
+            this.allOverdueTasks = [...overdueTasks];
+            
+            // Filter out tasks that are completed/postponed but still in shown list
+            this.tasks = overdueTasks.filter(task => 
+                !this.shownTaskIds.has(task.id) || task.id === this.currentTask?.id
+            );
 
             if (this.tasks.length === 0) {
                 this.showNoTasks();
@@ -232,7 +259,7 @@ class TodoistApp {
         }
         
         // Load tasks if not loaded yet (prevent race conditions)
-        if (this.tasks.length === 0) {
+        if (this.allOverdueTasks.length === 0) {
             if (this.isLoadingTasks) return;
             this.isLoadingTasks = true;
             try {
@@ -243,29 +270,91 @@ class TodoistApp {
             return;
         }
 
-        if (this.tasks.length === 1) {
-            this.currentTask = this.tasks[0];
-            this.saveCurrentTask();
-            this.displayTask(this.currentTask);
+        // Mark current task as shown if we have one
+        if (this.currentTask) {
+            this.shownTaskIds.add(this.currentTask.id);
+            this.saveShownTaskIds();
+        }
+
+        // Get unshown tasks
+        const unshownTasks = this.allOverdueTasks.filter(task => 
+            !this.shownTaskIds.has(task.id)
+        );
+
+        if (unshownTasks.length === 0) {
+            // All tasks have been shown - ask user to restart cycle
+            this.showRestartCyclePrompt();
             return;
         }
 
-        // Filtere die aktuelle Aufgabe aus der Liste
-        const availableTasks = this.tasks.filter(task => 
-            !this.currentTask || task.id !== this.currentTask.id
-        );
-
-        if (availableTasks.length === 0) {
-            // Fallback: Alle Aufgaben wieder verfügbar machen
-            const randomIndex = Math.floor(Math.random() * this.tasks.length);
-            this.currentTask = this.tasks[randomIndex];
-        } else {
-            const randomIndex = Math.floor(Math.random() * availableTasks.length);
-            this.currentTask = availableTasks[randomIndex];
-        }
+        // Pick random unshown task
+        const randomIndex = Math.floor(Math.random() * unshownTasks.length);
+        this.currentTask = unshownTasks[randomIndex];
         
         this.saveCurrentTask();
         this.displayTask(this.currentTask);
+    }
+
+    showRestartCyclePrompt() {
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('task-display').style.display = 'none';
+        document.getElementById('no-tasks').style.display = 'none';
+        document.getElementById('error-message').style.display = 'none';
+        
+        const taskSection = document.getElementById('task-section');
+        let restartMessage = document.getElementById('restart-cycle-message');
+        
+        if (!restartMessage) {
+            restartMessage = document.createElement('div');
+            restartMessage.id = 'restart-cycle-message';
+            restartMessage.className = 'restart-cycle-message';
+            restartMessage.innerHTML = `
+                <h3>🎉 Alle überfälligen Aufgaben durchgegangen!</h3>
+                <p>Du hast alle ${this.allOverdueTasks.length} überfälligen Aufgaben einmal gesehen.</p>
+                <p>Möchtest du wieder von vorne anfangen?</p>
+                <div class="restart-buttons">
+                    <button id="restart-cycle" class="btn btn-restart">🔄 Von vorne anfangen</button>
+                    <button id="refresh-all-tasks" class="btn btn-refresh">🔍 Nach neuen Aufgaben suchen</button>
+                </div>
+            `;
+            taskSection.appendChild(restartMessage);
+            
+            // Add event listeners
+            document.getElementById('restart-cycle').addEventListener('click', () => this.restartCycle());
+            document.getElementById('refresh-all-tasks').addEventListener('click', () => this.refreshAndRestart());
+        }
+        
+        restartMessage.style.display = 'block';
+    }
+
+    restartCycle() {
+        // Clear shown task IDs to start over
+        this.shownTaskIds.clear();
+        this.saveShownTaskIds();
+        
+        // Hide restart message
+        const restartMessage = document.getElementById('restart-cycle-message');
+        if (restartMessage) {
+            restartMessage.style.display = 'none';
+        }
+        
+        // Load random task to start new cycle
+        this.loadRandomTask();
+    }
+
+    async refreshAndRestart() {
+        // Clear shown task IDs
+        this.shownTaskIds.clear();
+        this.saveShownTaskIds();
+        
+        // Hide restart message
+        const restartMessage = document.getElementById('restart-cycle-message');
+        if (restartMessage) {
+            restartMessage.style.display = 'none';
+        }
+        
+        // Reload all tasks and start fresh
+        await this.loadTasks();
     }
 
     async displayTask(task) {
@@ -306,6 +395,42 @@ class TodoistApp {
         
         const dueDate = task.due ? new Date(task.due.date).toLocaleDateString('de-DE') : 'Kein Fälligkeitsdatum';
         document.getElementById('task-due-date').textContent = dueDate;
+        
+        // Update progress indicator
+        this.updateProgressIndicator();
+    }
+
+    updateProgressIndicator() {
+        if (this.allOverdueTasks.length === 0) return;
+        
+        const totalTasks = this.allOverdueTasks.length;
+        const shownTasks = this.shownTaskIds.size;
+        const currentTaskCount = this.currentTask ? 1 : 0;
+        const effectiveShownCount = Math.min(shownTasks + currentTaskCount, totalTasks);
+        
+        // Update or create progress indicator
+        let progressContainer = document.getElementById('task-progress');
+        if (!progressContainer) {
+            progressContainer = document.createElement('div');
+            progressContainer.id = 'task-progress';
+            progressContainer.className = 'task-progress';
+            
+            const taskMeta = document.querySelector('.task-meta');
+            if (taskMeta) {
+                taskMeta.parentNode.insertBefore(progressContainer, taskMeta);
+            }
+        }
+        
+        const percentage = Math.round((effectiveShownCount / totalTasks) * 100);
+        progressContainer.innerHTML = `
+            <div class="progress-info">
+                <span>Fortschritt: ${effectiveShownCount}/${totalTasks} Aufgaben</span>
+                <span>${percentage}%</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: ${percentage}%"></div>
+            </div>
+        `;
     }
 
     resetButtonStates() {
@@ -375,14 +500,15 @@ class TodoistApp {
                 throw new Error(`HTTP ${response.status}: ${response.statusText}`);
             }
 
-            this.tasks = this.tasks.filter(task => task.id !== this.currentTask.id);
+            // Remove from cached overdue tasks
+            this.allOverdueTasks = this.allOverdueTasks.filter(task => task.id !== this.currentTask.id);
+            // Also remove from shown tasks as it's completed
+            this.shownTaskIds.delete(this.currentTask.id);
+            this.saveShownTaskIds();
             this.clearCurrentTask();
             
-            if (this.tasks.length === 0) {
-                this.showNoTasks();
-            } else {
-                this.loadRandomTask();
-            }
+            // Load next task from cycle
+            this.loadRandomTask();
 
         } catch (error) {
             console.error('Fehler beim Abschließen der Aufgabe:', error);
@@ -424,14 +550,15 @@ class TodoistApp {
                 throw new Error(`HTTP ${response.status}: ${response.statusText}`);
             }
 
-            this.tasks = this.tasks.filter(task => task.id !== this.currentTask.id);
+            // Remove from cached overdue tasks (task is no longer overdue)
+            this.allOverdueTasks = this.allOverdueTasks.filter(task => task.id !== this.currentTask.id);
+            // Also remove from shown tasks as it's postponed
+            this.shownTaskIds.delete(this.currentTask.id);
+            this.saveShownTaskIds();
             this.clearCurrentTask();
             
-            if (this.tasks.length === 0) {
-                this.showNoTasks();
-            } else {
-                this.loadRandomTask();
-            }
+            // Load next task from cycle
+            this.loadRandomTask();
 
         } catch (error) {
             console.error('Fehler beim Verschieben der Aufgabe:', error);
@@ -473,14 +600,15 @@ class TodoistApp {
                 throw new Error(`HTTP ${response.status}: ${response.statusText}`);
             }
 
-            this.tasks = this.tasks.filter(task => task.id !== this.currentTask.id);
+            // Remove from cached overdue tasks (task is no longer overdue)
+            this.allOverdueTasks = this.allOverdueTasks.filter(task => task.id !== this.currentTask.id);
+            // Also remove from shown tasks as it's postponed
+            this.shownTaskIds.delete(this.currentTask.id);
+            this.saveShownTaskIds();
             this.clearCurrentTask();
             
-            if (this.tasks.length === 0) {
-                this.showNoTasks();
-            } else {
-                this.loadRandomTask();
-            }
+            // Load next task from cycle
+            this.loadRandomTask();
 
         } catch (error) {
             console.error('Fehler beim Verschieben der Aufgabe auf nächste Woche:', error);
