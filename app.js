@@ -16,11 +16,11 @@ class TodoistApp {
         if (this.apiKey) {
             this.showTaskSection();
             if (this.currentTask) {
-                // If we have a saved current task, show it but don't mark as "seen" yet
+                // If we have a saved current task, show it directly
                 this.displayTask(this.currentTask);
-                // Also preload tasks if not cached
+                // Also preload tasks in background if not cached
                 if (this.allOverdueTasks.length === 0) {
-                    this.loadTasks();
+                    this.loadTasksInBackground();
                 }
             } else {
                 // Preload tasks when app starts
@@ -254,6 +254,48 @@ class TodoistApp {
         } catch (error) {
             console.error('Fehler beim Laden der Aufgaben:', error);
             this.showError(`Fehler beim Laden der Aufgaben: ${error.message}`);
+        }
+    }
+
+    async loadTasksInBackground() {
+        try {
+            const response = await fetch('https://api.todoist.com/rest/v2/tasks', {
+                headers: {
+                    'Authorization': `Bearer ${this.apiKey}`
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
+
+            const allTasks = await response.json();
+            
+            const now = new Date();
+            const overdueTasks = allTasks.filter(task => {
+                if (!task.due) return false;
+                
+                try {
+                    const dueDate = new Date(task.due.date);
+                    if (isNaN(dueDate.getTime())) {
+                        console.warn('Invalid due date for task:', task.id, task.due.date);
+                        return false;
+                    }
+                    return dueDate <= now;
+                } catch (error) {
+                    console.error('Error parsing due date for task:', task.id, error);
+                    return false;
+                }
+            });
+            
+            // Update cache but don't change current UI state
+            this.allOverdueTasks = [...overdueTasks];
+            
+            // Update progress indicator with current state
+            this.updateProgressIndicator();
+
+        } catch (error) {
+            console.error('Fehler beim Laden der Aufgaben im Hintergrund:', error);
         }
     }
 
