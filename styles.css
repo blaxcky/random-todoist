@@ -401,8 +401,8 @@ button:disabled:hover {
 }
 
 .task-actions {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
     gap: 8px;
     margin-top: auto;
     padding-top: 16px;
@@ -410,8 +410,6 @@ button:disabled:hover {
 
 .btn-complete {
     background: #28a745;
-    flex: 1;
-    min-width: 120px;
 }
 
 .btn-complete:hover {
@@ -422,8 +420,6 @@ button:disabled:hover {
 .btn-postpone {
     background: #ffc107;
     color: #333;
-    flex: 1;
-    min-width: 120px;
 }
 
 .btn-postpone:hover {
@@ -434,8 +430,6 @@ button:disabled:hover {
 .btn-postpone-week {
     background: #6f42c1;
     color: white;
-    flex: 1;
-    min-width: 120px;
 }
 
 .btn-postpone-week:hover {
@@ -445,8 +439,6 @@ button:disabled:hover {
 
 .btn-next {
     background: #17a2b8;
-    flex: 1;
-    min-width: 120px;
 }
 
 .btn-next:hover {
@@ -502,12 +494,7 @@ button:disabled:hover {
     }
     
     .task-actions {
-        flex-direction: column;
-    }
-    
-    .task-actions button {
-        margin-right: 0;
-        width: 100%;
+        grid-template-columns: 1fr;
     }
     
     .task-meta {
