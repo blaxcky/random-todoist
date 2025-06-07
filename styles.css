@@ -627,6 +627,8 @@ button:disabled:hover {
     color: white;
     font-size: 1.1rem;
     padding: 12px 24px;
+    display: block;
+    margin: 0 auto;
 }
 
 .btn-start:hover {

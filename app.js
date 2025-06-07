@@ -12,7 +12,11 @@ class TodoistApp {
         
         if (this.apiKey) {
             this.showTaskSection();
-            this.showStartState();
+            if (this.currentTask) {
+                this.displayTask(this.currentTask);
+            } else {
+                this.showStartState();
+            }
         } else {
             this.showApiKeySection();
         }
@@ -75,6 +79,28 @@ class TodoistApp {
 
     loadApiKey() {
         this.apiKey = localStorage.getItem('todoist-api-key');
+        
+        // Load saved current task if exists
+        const savedTask = localStorage.getItem('current-task');
+        if (savedTask) {
+            try {
+                this.currentTask = JSON.parse(savedTask);
+            } catch (error) {
+                console.error('Fehler beim Laden der gespeicherten Aufgabe:', error);
+                localStorage.removeItem('current-task');
+            }
+        }
+    }
+
+    saveCurrentTask() {
+        if (this.currentTask) {
+            localStorage.setItem('current-task', JSON.stringify(this.currentTask));
+        }
+    }
+
+    clearCurrentTask() {
+        this.currentTask = null;
+        localStorage.removeItem('current-task');
     }
 
     saveApiKey() {
@@ -186,6 +212,7 @@ class TodoistApp {
 
         if (this.tasks.length === 1) {
             this.currentTask = this.tasks[0];
+            this.saveCurrentTask();
             this.displayTask(this.currentTask);
             return;
         }
@@ -204,6 +231,7 @@ class TodoistApp {
             this.currentTask = availableTasks[randomIndex];
         }
         
+        this.saveCurrentTask();
         this.displayTask(this.currentTask);
     }
 
@@ -281,6 +309,7 @@ class TodoistApp {
             }
 
             this.tasks = this.tasks.filter(task => task.id !== this.currentTask.id);
+            this.clearCurrentTask();
             
             if (this.tasks.length === 0) {
                 this.showNoTasks();
@@ -329,6 +358,7 @@ class TodoistApp {
             }
 
             this.tasks = this.tasks.filter(task => task.id !== this.currentTask.id);
+            this.clearCurrentTask();
             
             if (this.tasks.length === 0) {
                 this.showNoTasks();
@@ -426,6 +456,7 @@ class TodoistApp {
             }
 
             this.currentTask.content = newTitle;
+            this.saveCurrentTask();
             
             const taskInList = this.tasks.find(task => task.id === this.currentTask.id);
             if (taskInList) {
