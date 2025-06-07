@@ -241,6 +241,9 @@ class TodoistApp {
         document.getElementById('no-tasks').style.display = 'none';
         document.getElementById('error-message').style.display = 'none';
         document.getElementById('task-display').style.display = 'block';
+        
+        // Reset all button states
+        this.resetButtonStates();
 
         const titleElement = document.getElementById('task-title');
         titleElement.innerHTML = this.formatLinks(task.content);
@@ -271,6 +274,24 @@ class TodoistApp {
         
         const dueDate = task.due ? new Date(task.due.date).toLocaleDateString('de-DE') : 'Kein Fälligkeitsdatum';
         document.getElementById('task-due-date').textContent = dueDate;
+    }
+
+    resetButtonStates() {
+        const buttons = [
+            { id: 'complete-task', text: '✓ Erledigt' },
+            { id: 'postpone-task', text: '⌛ Morgen' },
+            { id: 'postpone-week-task', text: '📅 Nächste Woche' },
+            { id: 'next-task', text: '➡️ Nächste Aufgabe' }
+        ];
+        
+        buttons.forEach(button => {
+            const element = document.getElementById(button.id);
+            if (element) {
+                element.disabled = false;
+                element.textContent = button.text;
+                element.style.opacity = '1';
+            }
+        });
     }
 
     formatLinks(text) {
