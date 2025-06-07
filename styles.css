@@ -431,6 +431,18 @@ button:disabled:hover {
     box-shadow: 0 4px 12px rgba(255, 193, 7, 0.3);
 }
 
+.btn-postpone-week {
+    background: #6f42c1;
+    color: white;
+    flex: 1;
+    min-width: 120px;
+}
+
+.btn-postpone-week:hover {
+    background: #5a369b;
+    box-shadow: 0 4px 12px rgba(111, 66, 193, 0.3);
+}
+
 .btn-next {
     background: #17a2b8;
     flex: 1;

@@ -39,6 +39,7 @@ class TodoistApp {
         document.getElementById('change-api-key').addEventListener('click', () => this.showApiKeySection());
         document.getElementById('complete-task').addEventListener('click', () => this.completeTask());
         document.getElementById('postpone-task').addEventListener('click', () => this.postponeTask());
+        document.getElementById('postpone-week-task').addEventListener('click', () => this.postponeTaskWeek());
         document.getElementById('next-task').addEventListener('click', () => this.loadRandomTask());
         document.getElementById('refresh-tasks').addEventListener('click', () => this.loadTasks());
         document.getElementById('edit-title').addEventListener('click', () => this.openEditPopup());
@@ -368,6 +369,55 @@ class TodoistApp {
 
         } catch (error) {
             console.error('Fehler beim Verschieben der Aufgabe:', error);
+            this.showError(`Fehler beim Verschieben der Aufgabe: ${error.message}`);
+            
+            postponeButton.disabled = false;
+            postponeButton.textContent = originalText;
+            postponeButton.style.opacity = '1';
+        }
+    }
+
+    async postponeTaskWeek() {
+        if (!this.currentTask) return;
+
+        const postponeButton = document.getElementById('postpone-week-task');
+        const originalText = postponeButton.textContent;
+        
+        postponeButton.disabled = true;
+        postponeButton.textContent = '⏳ Wird verschoben...';
+        postponeButton.style.opacity = '0.7';
+
+        const nextWeek = new Date();
+        nextWeek.setDate(nextWeek.getDate() + 7);
+        const nextWeekStr = nextWeek.toISOString().split('T')[0];
+
+        try {
+            const response = await fetch(`https://api.todoist.com/rest/v2/tasks/${this.currentTask.id}`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${this.apiKey}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    due_date: nextWeekStr
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
+
+            this.tasks = this.tasks.filter(task => task.id !== this.currentTask.id);
+            this.clearCurrentTask();
+            
+            if (this.tasks.length === 0) {
+                this.showNoTasks();
+            } else {
+                this.loadRandomTask();
+            }
+
+        } catch (error) {
+            console.error('Fehler beim Verschieben der Aufgabe auf nächste Woche:', error);
             this.showError(`Fehler beim Verschieben der Aufgabe: ${error.message}`);
             
             postponeButton.disabled = false;
