@@ -401,49 +401,110 @@ button:disabled:hover {
 }
 
 .task-actions {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
     margin-top: auto;
+    padding-top: 20px;
+}
+
+.primary-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.secondary-actions {
+    display: flex;
+    justify-content: center;
+    border-top: 1px solid #e1e5e9;
     padding-top: 16px;
 }
 
 .btn-complete {
     background: #28a745;
+    font-weight: 600;
+    padding: 14px 20px;
+    font-size: 16px;
+    border-radius: 12px;
+    position: relative;
+    overflow: hidden;
 }
 
 .btn-complete:hover {
     background: #218838;
-    box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+    box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
+    transform: translateY(-3px);
+}
+
+.btn-complete::before {
+    content: '✓';
+    margin-right: 8px;
+    font-weight: bold;
 }
 
 .btn-postpone {
     background: #ffc107;
     color: #333;
+    font-weight: 600;
+    padding: 14px 20px;
+    font-size: 16px;
+    border-radius: 12px;
 }
 
 .btn-postpone:hover {
     background: #e0a800;
-    box-shadow: 0 4px 12px rgba(255, 193, 7, 0.3);
+    box-shadow: 0 6px 20px rgba(255, 193, 7, 0.4);
+    transform: translateY(-3px);
+}
+
+.btn-postpone::before {
+    content: '⏰';
+    margin-right: 8px;
 }
 
 .btn-postpone-week {
     background: #6f42c1;
     color: white;
+    font-weight: 600;
+    padding: 14px 20px;
+    font-size: 16px;
+    border-radius: 12px;
 }
 
 .btn-postpone-week:hover {
     background: #5a369b;
-    box-shadow: 0 4px 12px rgba(111, 66, 193, 0.3);
+    box-shadow: 0 6px 20px rgba(111, 66, 193, 0.4);
+    transform: translateY(-3px);
+}
+
+.btn-postpone-week::before {
+    content: '📅';
+    margin-right: 8px;
 }
 
 .btn-next {
-    background: #17a2b8;
+    background: #6c757d;
+    color: white;
+    font-weight: 500;
+    padding: 12px 24px;
+    font-size: 15px;
+    border-radius: 8px;
+    border: 2px solid transparent;
+    transition: all 0.2s ease;
 }
 
 .btn-next:hover {
-    background: #138496;
-    box-shadow: 0 4px 12px rgba(23, 162, 184, 0.3);
+    background: #5a6268;
+    border-color: #495057;
+    box-shadow: 0 3px 10px rgba(108, 117, 125, 0.3);
+    transform: translateY(-1px);
+}
+
+.btn-next::before {
+    content: '→';
+    margin-right: 8px;
+    font-weight: bold;
 }
 
 .btn-refresh {
