@@ -136,7 +136,7 @@ button:disabled:hover {
 .task-details-block {
     background: white;
     padding: 20px;
-    border-radius: 0 0 16px 16px;
+    border-radius: 16px 16px 16px 16px;
     min-height: 300px;
     display: flex;
     flex-direction: column;
