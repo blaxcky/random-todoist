@@ -90,6 +90,42 @@ button:active {
     transform: translateY(0);
 }
 
+/* Fix mobile button sticking issue */
+@media (hover: none) and (pointer: coarse) {
+    button:hover {
+        background: #e44332;
+        transform: none;
+        box-shadow: none;
+    }
+    
+    .btn-complete:hover {
+        transform: none;
+        box-shadow: none;
+    }
+    
+    .btn-postpone:hover {
+        transform: none;
+        box-shadow: none;
+    }
+    
+    .btn-postpone-week:hover {
+        transform: none;
+        box-shadow: none;
+    }
+    
+    .btn-next:hover {
+        transform: none;
+        box-shadow: none;
+    }
+    
+    .btn-edit-floating:hover {
+        background: rgba(255,255,255,0.15);
+        transform: none;
+        opacity: 0.8;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+}
+
 button:disabled {
     cursor: not-allowed;
     transform: none !important;
