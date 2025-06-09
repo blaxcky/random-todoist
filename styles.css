@@ -530,6 +530,20 @@ button:disabled:hover {
     gap: 8px;
 }
 
+.btn-next:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(108, 117, 125, 0.3);
+}
+
+.btn-next::before {
+    content: '→';
+    font-size: 16px;
+    display: inline;
+    margin-right: 8px;
+    margin-bottom: 0;
+    font-weight: bold;
+}
+
 .btn-refresh {
     background: #6c757d;
     width: 100%;
