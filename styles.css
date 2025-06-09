@@ -124,7 +124,7 @@ button:disabled:hover {
     background: linear-gradient(135deg, #e44332 0%, #d63621 100%);
     color: white;
     padding: 20px;
-    border-radius: 16px 16px 0 0;
+    border-radius: 16px;
     margin-bottom: 0;
     height: 140px;
     display: flex;
@@ -136,7 +136,7 @@ button:disabled:hover {
 .task-details-block {
     background: white;
     padding: 20px;
-    border-radius: 16px 16px 16px 16px;
+    border-radius: 16px;
     min-height: 300px;
     display: flex;
     flex-direction: column;
@@ -360,13 +360,17 @@ button:disabled:hover {
 }
 
 #task-description {
-    color: #666;
+    color: white;
     margin-bottom: 16px;
     line-height: 1.6;
     flex-shrink: 0;
     min-height: 60px;
     display: flex;
     align-items: flex-start;
+    background: linear-gradient(135deg, rgba(228, 67, 50, 0.8) 0%, rgba(214, 54, 33, 0.8) 100%);
+    padding: 16px;
+    border-radius: 12px;
+    white-space: pre-wrap;
 }
 
 .task-meta {
