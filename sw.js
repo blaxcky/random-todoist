@@ -1,5 +1,5 @@
-const CACHE_NAME = 'random-todoist-v2';
-const PREVIOUS_CACHES = ['random-todoist-v1'];
+const CACHE_NAME = 'random-todoist-v3';
+const PREVIOUS_CACHES = ['random-todoist-v1', 'random-todoist-v2'];
 
 const urlsToCache = [
     './',
