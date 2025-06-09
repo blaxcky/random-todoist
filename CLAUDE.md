@@ -58,3 +58,8 @@ This is a Progressive Web App (PWA) that integrates with the Todoist API v2 to d
 - PWA manifest configured for GitHub Pages deployment (`/random-todoist/` base path)
 - Service worker handles offline functionality and automatic updates
 - All async operations implement proper loading states and error handling
+
+## User Preferences
+- Make changes directly without asking for permission first
+- Be proactive in fixing issues and implementing improvements
+- Only ask for clarification when the requirement is genuinely unclear
