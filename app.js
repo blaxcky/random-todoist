@@ -539,10 +539,10 @@ class TodoistApp {
 
     resetButtonStates() {
         const buttons = [
-            { id: 'complete-task', text: '✓ Erledigt' },
-            { id: 'postpone-task', text: '⌛ Morgen' },
-            { id: 'postpone-week-task', text: '📅 Nächste Woche' },
-            { id: 'next-task', text: '➡️ Nächste Aufgabe' }
+            { id: 'complete-task', text: 'Erledigt' },
+            { id: 'postpone-task', text: 'Morgen' },
+            { id: 'postpone-week-task', text: 'Nächste Woche' },
+            { id: 'next-task', text: 'Nächste Aufgabe' }
         ];
         
         buttons.forEach(button => {
