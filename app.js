@@ -6,12 +6,6 @@ class TodoistApp {
         this.isLoadingTasks = false;
         this.shownTaskIds = new Set(); // Track which tasks have been shown
         this.allOverdueTasks = []; // Cache all overdue tasks
-        this.currentLayout = 'standard'; // Layout state
-        this.layouts = ['standard', 'compact', 'split', 'minimal']; // Available layouts
-        this.touchStartX = 0;
-        this.touchEndX = 0;
-        this.mouseStartX = 0;
-        this.isMouseDragging = false;
         this.init();
     }
 
@@ -35,9 +29,6 @@ class TodoistApp {
         } else {
             this.showApiKeySection();
         }
-        
-        // Initialize layout on app start
-        this.applyLayout();
         
         // Menu-Button Event binding with proper DOM checking
         this.bindMenuButton();
@@ -102,17 +93,6 @@ class TodoistApp {
             }
         });
         
-        // Touch events for swipe gestures
-        document.addEventListener('touchstart', (e) => this.handleTouchStart(e), { passive: true });
-        document.addEventListener('touchend', (e) => this.handleTouchEnd(e), { passive: true });
-        
-        // Mouse events for desktop drag gestures
-        document.addEventListener('mousedown', (e) => this.handleMouseDown(e));
-        document.addEventListener('mousemove', (e) => this.handleMouseMove(e));
-        document.addEventListener('mouseup', (e) => this.handleMouseUp(e));
-        
-        // Keyboard shortcuts for layout switching
-        document.addEventListener('keydown', (e) => this.handleKeydown(e));
         
         // Fix button stuck states
         document.addEventListener('touchstart', () => this.clearButtonFocus());
@@ -146,11 +126,6 @@ class TodoistApp {
             }
         }
         
-        // Load saved layout preference
-        const savedLayout = localStorage.getItem('preferred-layout');
-        if (savedLayout && this.layouts.includes(savedLayout)) {
-            this.currentLayout = savedLayout;
-        }
     }
 
     saveCurrentTask() {
@@ -466,11 +441,6 @@ class TodoistApp {
         document.getElementById('error-message').style.display = 'none';
         document.getElementById('task-display').style.display = 'block';
         
-        // Apply current layout
-        this.applyLayout();
-        
-        // Show swipe hint for new users, hide after 10 seconds
-        this.showSwipeHint();
         
         // Reset all button states
         this.resetButtonStates();
@@ -919,205 +889,6 @@ class TodoistApp {
         titleElement.style.lineHeight = length > 50 ? '1.3' : '1.4';
     }
 
-    handleTouchStart(e) {
-        // Only handle swipes on the task display area
-        if (!e.target.closest('#task-display') && !e.target.closest('.task-card')) {
-            return;
-        }
-        
-        this.touchStartX = e.changedTouches[0].screenX;
-    }
-
-    handleTouchEnd(e) {
-        // Only handle swipes on the task display area
-        if (!e.target.closest('#task-display') && !e.target.closest('.task-card')) {
-            return;
-        }
-        
-        this.touchEndX = e.changedTouches[0].screenX;
-        this.handleSwipe();
-    }
-
-    handleSwipe() {
-        const swipeThreshold = 50; // Minimum distance for a swipe
-        const diff = this.touchStartX - this.touchEndX;
-        
-        if (Math.abs(diff) < swipeThreshold) return;
-        
-        if (diff > 0) {
-            // Swipe left - next layout
-            this.switchLayout('next');
-        } else {
-            // Swipe right - previous layout
-            this.switchLayout('prev');
-        }
-    }
-
-    switchLayout(direction) {
-        const currentIndex = this.layouts.indexOf(this.currentLayout);
-        let newIndex;
-        
-        if (direction === 'next') {
-            newIndex = (currentIndex + 1) % this.layouts.length;
-        } else {
-            newIndex = (currentIndex - 1 + this.layouts.length) % this.layouts.length;
-        }
-        
-        this.currentLayout = this.layouts[newIndex];
-        this.saveLayoutPreference();
-        this.applyLayout();
-        this.showLayoutIndicator();
-    }
-
-    saveLayoutPreference() {
-        localStorage.setItem('preferred-layout', this.currentLayout);
-    }
-
-    applyLayout() {
-        const taskCard = document.getElementById('task-display');
-        if (!taskCard) return;
-        
-        // Remove all layout classes
-        this.layouts.forEach(layout => {
-            taskCard.classList.remove(`layout-${layout}`);
-        });
-        
-        // Add current layout class
-        taskCard.classList.add(`layout-${this.currentLayout}`);
-    }
-
-    showLayoutIndicator() {
-        // Show a temporary indicator of the current layout
-        let indicator = document.getElementById('layout-indicator');
-        if (!indicator) {
-            indicator = document.createElement('div');
-            indicator.id = 'layout-indicator';
-            indicator.className = 'layout-indicator';
-            document.body.appendChild(indicator);
-        }
-        
-        const layoutNames = {
-            'standard': '📋 Standard',
-            'compact': '📝 Kompakt',
-            'split': '📊 Split',
-            'minimal': '✨ Minimal'
-        };
-        
-        indicator.textContent = layoutNames[this.currentLayout];
-        indicator.style.display = 'block';
-        
-        // Auto-hide after 2 seconds
-        clearTimeout(this.layoutIndicatorTimeout);
-        this.layoutIndicatorTimeout = setTimeout(() => {
-            indicator.style.display = 'none';
-        }, 2000);
-        
-        // Hide swipe hint after first swipe
-        this.hideSwipeHint();
-    }
-
-    showSwipeHint() {
-        // Only show hint if user hasn't swiped before
-        const hasSwipedBefore = localStorage.getItem('has-swiped-layouts');
-        if (hasSwipedBefore) return;
-        
-        const taskCard = document.getElementById('task-display');
-        if (taskCard) {
-            taskCard.classList.remove('layout-hint-hidden');
-            
-            // Auto-hide after 10 seconds
-            clearTimeout(this.swipeHintTimeout);
-            this.swipeHintTimeout = setTimeout(() => {
-                this.hideSwipeHint();
-            }, 10000);
-        }
-    }
-
-    hideSwipeHint() {
-        const taskCard = document.getElementById('task-display');
-        if (taskCard) {
-            taskCard.classList.add('layout-hint-hidden');
-            // Remember that user has seen/used the swipe feature
-            localStorage.setItem('has-swiped-layouts', 'true');
-        }
-    }
-
-    handleMouseDown(e) {
-        // Only handle on task display area, skip if it's a button or input
-        if (!e.target.closest('#task-display') && !e.target.closest('.task-card')) {
-            return;
-        }
-        
-        // Skip if clicking on interactive elements
-        if (e.target.closest('button') || e.target.closest('input') || e.target.closest('textarea')) {
-            return;
-        }
-        
-        this.mouseStartX = e.clientX;
-        this.isMouseDragging = true;
-        e.preventDefault(); // Prevent text selection
-    }
-
-    handleMouseMove(e) {
-        if (!this.isMouseDragging) return;
-        
-        // Change cursor to indicate dragging
-        document.body.style.cursor = 'grabbing';
-    }
-
-    handleMouseUp(e) {
-        if (!this.isMouseDragging) return;
-        
-        const mouseEndX = e.clientX;
-        const diff = this.mouseStartX - mouseEndX;
-        const dragThreshold = 80; // Larger threshold for mouse than touch
-        
-        document.body.style.cursor = '';
-        this.isMouseDragging = false;
-        
-        if (Math.abs(diff) < dragThreshold) return;
-        
-        if (diff > 0) {
-            // Drag left - next layout
-            this.switchLayout('next');
-        } else {
-            // Drag right - previous layout
-            this.switchLayout('prev');
-        }
-    }
-
-    handleKeydown(e) {
-        // Only handle when task is displayed and no input/textarea is focused
-        const activeElement = document.activeElement;
-        if (activeElement && (activeElement.tagName === 'INPUT' || activeElement.tagName === 'TEXTAREA')) {
-            return;
-        }
-        
-        const taskDisplay = document.getElementById('task-display');
-        if (!taskDisplay || taskDisplay.style.display === 'none') {
-            return;
-        }
-
-        // Arrow keys for layout switching
-        if (e.key === 'ArrowLeft') {
-            e.preventDefault();
-            this.switchLayout('prev');
-        } else if (e.key === 'ArrowRight') {
-            e.preventDefault();
-            this.switchLayout('next');
-        }
-        // Number keys for direct layout selection
-        else if (e.key >= '1' && e.key <= '4') {
-            e.preventDefault();
-            const layoutIndex = parseInt(e.key) - 1;
-            if (this.layouts[layoutIndex]) {
-                this.currentLayout = this.layouts[layoutIndex];
-                this.saveLayoutPreference();
-                this.applyLayout();
-                this.showLayoutIndicator();
-            }
-        }
-    }
 }
 
 if ('serviceWorker' in navigator) {
