@@ -90,6 +90,10 @@ button:active {
     transform: translateY(0);
 }
 
+button:not(:active):not(:disabled) {
+    transition: all 0.3s ease;
+}
+
 /* Fix mobile button sticking issue */
 @media (hover: none) and (pointer: coarse) {
     button:hover {

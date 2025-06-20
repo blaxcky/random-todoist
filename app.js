@@ -113,6 +113,11 @@ class TodoistApp {
         
         // Keyboard shortcuts for layout switching
         document.addEventListener('keydown', (e) => this.handleKeydown(e));
+        
+        // Fix button stuck states
+        document.addEventListener('touchstart', () => this.clearButtonFocus());
+        document.addEventListener('touchend', () => this.clearButtonFocus());
+        document.addEventListener('click', () => this.clearButtonFocus());
     }
 
     loadApiKey() {
@@ -551,8 +556,22 @@ class TodoistApp {
                 element.disabled = false;
                 element.textContent = button.text;
                 element.style.opacity = '1';
+                element.style.transform = '';
+                element.style.boxShadow = '';
+                element.blur();
             }
         });
+    }
+
+    clearButtonFocus() {
+        setTimeout(() => {
+            const activeElement = document.activeElement;
+            if (activeElement && activeElement.tagName === 'BUTTON') {
+                activeElement.blur();
+                activeElement.style.transform = '';
+                activeElement.style.boxShadow = '';
+            }
+        }, 100);
     }
 
     formatLinks(text) {
