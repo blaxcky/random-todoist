@@ -87,10 +87,11 @@ button:hover {
 }
 
 button:active {
-    transform: translateY(0);
+    transform: translateY(0) !important;
 }
 
-button:not(:active):not(:disabled) {
+button:not(:hover):not(:active):not(:disabled) {
+    transform: translateY(0);
     transition: all 0.3s ease;
 }
 
@@ -494,6 +495,10 @@ button:disabled:hover {
     box-shadow: 0 8px 25px rgba(40, 167, 69, 0.4);
 }
 
+.btn-complete:not(:hover):not(:active):not(:disabled) {
+    transform: translateY(0);
+}
+
 .btn-complete::before {
     content: '✓';
     font-size: 20px;
@@ -523,6 +528,10 @@ button:disabled:hover {
 .btn-postpone:hover {
     transform: translateY(-4px);
     box-shadow: 0 8px 25px rgba(255, 193, 7, 0.4);
+}
+
+.btn-postpone:not(:hover):not(:active):not(:disabled) {
+    transform: translateY(0);
 }
 
 .btn-postpone::before {
@@ -555,6 +564,10 @@ button:disabled:hover {
     box-shadow: 0 8px 25px rgba(111, 66, 193, 0.4);
 }
 
+.btn-postpone-week:not(:hover):not(:active):not(:disabled) {
+    transform: translateY(0);
+}
+
 .btn-postpone-week::before {
     content: '📅';
     font-size: 20px;
@@ -580,6 +593,10 @@ button:disabled:hover {
 .btn-next:hover {
     transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(108, 117, 125, 0.3);
+}
+
+.btn-next:not(:hover):not(:active):not(:disabled) {
+    transform: translateY(0);
 }
 
 .btn-next::before {
