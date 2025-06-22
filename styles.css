@@ -137,6 +137,11 @@ button:not(:hover):not(:active):not(:disabled) {
         opacity: 0.8;
         box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
+    
+    .task-description-toggle:hover {
+        background: rgba(255, 255, 255, 0.15);
+        transform: none !important;
+    }
 }
 
 button:disabled {
@@ -413,16 +418,65 @@ button:disabled:hover {
     margin: 0 -20px 16px -20px;
     line-height: 1.6;
     flex-shrink: 0;
-    min-height: 60px;
-    display: flex;
-    align-items: flex-start;
     background: linear-gradient(135deg, rgba(228, 67, 50, 0.9) 0%, rgba(214, 54, 33, 0.9) 100%);
-    padding: 20px;
     border-radius: 0 0 12px 12px;
     border-top: 1px solid rgba(0,0,0,0.2);
     white-space: pre-wrap;
     backdrop-filter: blur(10px);
     box-shadow: 0 2px 0 rgba(0,0,0,0.1);
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.task-description-content {
+    padding: 20px;
+    transition: all 0.3s ease;
+    max-height: 120px;
+    overflow: hidden;
+    position: relative;
+}
+
+.task-description-content.expanded {
+    max-height: none;
+    overflow: visible;
+}
+
+.task-description-content.has-overflow::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 40px;
+    background: linear-gradient(transparent, rgba(228, 67, 50, 0.9));
+    pointer-events: none;
+}
+
+.task-description-content.expanded::after {
+    display: none;
+}
+
+.task-description-toggle {
+    background: rgba(255, 255, 255, 0.15);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    margin: 0 20px 12px 20px;
+    border-radius: 16px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+}
+
+.task-description-toggle:hover {
+    background: rgba(255, 255, 255, 0.25);
+    transform: translateY(-1px);
 }
 
 .task-meta {

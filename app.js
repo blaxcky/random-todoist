@@ -451,7 +451,7 @@ class TodoistApp {
         // Dynamische Schriftgröße basierend auf Titellänge
         this.adjustTitleSize(titleElement, task.content);
         
-        document.getElementById('task-description').innerHTML = this.formatLinks(task.description || '');
+        this.setupTaskDescription(task.description || '');
         
         let projectName = '';
         if (task.project_id) {
@@ -864,6 +864,66 @@ class TodoistApp {
 
     closeMenu() {
         document.getElementById('dropdown-menu').style.display = 'none';
+    }
+
+    setupTaskDescription(description) {
+        const descriptionElement = document.getElementById('task-description');
+        
+        if (!description || description.trim() === '') {
+            descriptionElement.style.display = 'none';
+            return;
+        }
+        
+        descriptionElement.style.display = 'block';
+        
+        // Check if description is long enough to need collapsing
+        const isLongDescription = description.length > 200;
+        
+        if (isLongDescription) {
+            descriptionElement.innerHTML = `
+                <div class="task-description-content has-overflow" id="task-description-content">
+                    ${this.formatLinks(description)}
+                </div>
+                <button class="task-description-toggle" id="task-description-toggle">
+                    <span>Mehr anzeigen</span>
+                    <span style="margin-left: 2px;">↓</span>
+                </button>
+            `;
+            
+            // Add event listener for toggle
+            const toggleButton = document.getElementById('task-description-toggle');
+            const content = document.getElementById('task-description-content');
+            
+            if (toggleButton && !toggleButton.hasAttribute('data-bound')) {
+                toggleButton.addEventListener('click', () => {
+                    const isExpanded = content.classList.contains('expanded');
+                    
+                    if (isExpanded) {
+                        content.classList.remove('expanded');
+                        content.classList.add('has-overflow');
+                        toggleButton.innerHTML = `
+                            <span>Mehr anzeigen</span>
+                            <span style="margin-left: 2px;">↓</span>
+                        `;
+                    } else {
+                        content.classList.add('expanded');
+                        content.classList.remove('has-overflow');
+                        toggleButton.innerHTML = `
+                            <span>Weniger anzeigen</span>
+                            <span style="margin-left: 2px;">↑</span>
+                        `;
+                    }
+                });
+                toggleButton.setAttribute('data-bound', 'true');
+            }
+        } else {
+            // Short description, show normally
+            descriptionElement.innerHTML = `
+                <div class="task-description-content">
+                    ${this.formatLinks(description)}
+                </div>
+            `;
+        }
     }
 
     adjustTitleSize(titleElement, content) {
