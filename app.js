@@ -524,13 +524,36 @@ class TodoistApp {
             const element = document.getElementById(button.id);
             if (element) {
                 element.disabled = false;
-                element.textContent = button.text;
+                element.classList.remove('btn-loading');
+                
+                // Wrap text in span if not already wrapped
+                if (!element.querySelector('.btn-text')) {
+                    element.innerHTML = `<span class="btn-text">${button.text}</span>`;
+                } else {
+                    element.querySelector('.btn-text').textContent = button.text;
+                }
+                
                 element.style.opacity = '1';
                 element.style.transform = '';
                 element.style.boxShadow = '';
                 element.blur();
             }
         });
+    }
+    
+    setButtonLoading(buttonId, enabled = true) {
+        const element = document.getElementById(buttonId);
+        if (element) {
+            if (enabled) {
+                element.disabled = true;
+                element.classList.add('btn-loading');
+                element.style.opacity = '0.7';
+            } else {
+                element.disabled = false;
+                element.classList.remove('btn-loading');
+                element.style.opacity = '1';
+            }
+        }
     }
 
     clearButtonFocus() {
@@ -574,12 +597,7 @@ class TodoistApp {
     async completeTask() {
         if (!this.currentTask) return;
 
-        const completeButton = document.getElementById('complete-task');
-        const originalText = completeButton.textContent;
-        
-        completeButton.disabled = true;
-        completeButton.textContent = '⏳ Wird erledigt...';
-        completeButton.style.opacity = '0.7';
+        this.setButtonLoading('complete-task', true);
 
         try {
             const response = await fetch(`https://api.todoist.com/rest/v2/tasks/${this.currentTask.id}/close`, {
@@ -606,22 +624,14 @@ class TodoistApp {
         } catch (error) {
             console.error('Fehler beim Abschließen der Aufgabe:', error);
             this.showError(`Fehler beim Abschließen der Aufgabe: ${error.message}`);
-            
-            completeButton.disabled = false;
-            completeButton.textContent = originalText;
-            completeButton.style.opacity = '1';
+            this.setButtonLoading('complete-task', false);
         }
     }
 
     async postponeTask() {
         if (!this.currentTask) return;
 
-        const postponeButton = document.getElementById('postpone-task');
-        const originalText = postponeButton.textContent;
-        
-        postponeButton.disabled = true;
-        postponeButton.textContent = '⏳ Wird verschoben...';
-        postponeButton.style.opacity = '0.7';
+        this.setButtonLoading('postpone-task', true);
 
         const tomorrow = new Date();
         tomorrow.setDate(tomorrow.getDate() + 1);
@@ -656,22 +666,14 @@ class TodoistApp {
         } catch (error) {
             console.error('Fehler beim Verschieben der Aufgabe:', error);
             this.showError(`Fehler beim Verschieben der Aufgabe: ${error.message}`);
-            
-            postponeButton.disabled = false;
-            postponeButton.textContent = originalText;
-            postponeButton.style.opacity = '1';
+            this.setButtonLoading('postpone-task', false);
         }
     }
 
     async postponeTaskWeek() {
         if (!this.currentTask) return;
 
-        const postponeButton = document.getElementById('postpone-week-task');
-        const originalText = postponeButton.textContent;
-        
-        postponeButton.disabled = true;
-        postponeButton.textContent = '⏳ Wird verschoben...';
-        postponeButton.style.opacity = '0.7';
+        this.setButtonLoading('postpone-week-task', true);
 
         const nextWeek = new Date();
         nextWeek.setDate(nextWeek.getDate() + 7);
@@ -706,10 +708,7 @@ class TodoistApp {
         } catch (error) {
             console.error('Fehler beim Verschieben der Aufgabe auf nächste Woche:', error);
             this.showError(`Fehler beim Verschieben der Aufgabe: ${error.message}`);
-            
-            postponeButton.disabled = false;
-            postponeButton.textContent = originalText;
-            postponeButton.style.opacity = '1';
+            this.setButtonLoading('postpone-week-task', false);
         }
     }
 
@@ -772,7 +771,7 @@ class TodoistApp {
 
         const originalText = saveButton.textContent;
         saveButton.disabled = true;
-        saveButton.textContent = '⏳ Speichert...';
+        saveButton.innerHTML = '⏳';
         saveButton.style.opacity = '0.7';
         inputElement.disabled = true;
 

@@ -488,6 +488,8 @@ button:disabled:hover {
     border: none;
     text-align: center;
     min-height: 60px;
+    width: 100%;
+    min-width: 120px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -525,6 +527,8 @@ button:disabled:hover {
     border: none;
     text-align: center;
     min-height: 60px;
+    width: 100%;
+    min-width: 120px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -559,6 +563,8 @@ button:disabled:hover {
     border: none;
     text-align: center;
     min-height: 60px;
+    width: 100%;
+    min-width: 120px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -614,6 +620,29 @@ button:disabled:hover {
     margin-right: 8px;
     margin-bottom: 0;
     font-weight: bold;
+}
+
+/* Loading spinner animation */
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.btn-loading {
+    position: relative;
+    pointer-events: none;
+}
+
+.btn-loading::before {
+    content: '⏳';
+    animation: spin 1s linear infinite;
+    display: block !important;
+    margin: 0 !important;
+    font-size: 20px !important;
+}
+
+.btn-loading .btn-text {
+    opacity: 0;
 }
 
 .btn-refresh {
