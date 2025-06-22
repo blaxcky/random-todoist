@@ -97,35 +97,43 @@ button:not(:hover):not(:active):not(:disabled) {
 
 /* Fix mobile button sticking issue */
 @media (hover: none) and (pointer: coarse) {
+    button {
+        transform: none !important;
+    }
+    
     button:hover {
         background: #e44332;
-        transform: none;
+        transform: none !important;
         box-shadow: none;
     }
     
     .btn-complete:hover {
-        transform: none;
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        transform: none !important;
         box-shadow: none;
     }
     
     .btn-postpone:hover {
-        transform: none;
+        background: linear-gradient(135deg, #ffc107 0%, #fd7e14 100%);
+        transform: none !important;
         box-shadow: none;
     }
     
     .btn-postpone-week:hover {
-        transform: none;
+        background: linear-gradient(135deg, #6f42c1 0%, #e83e8c 100%);
+        transform: none !important;
         box-shadow: none;
     }
     
     .btn-next:hover {
-        transform: none;
+        background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+        transform: none !important;
         box-shadow: none;
     }
     
     .btn-edit-floating:hover {
         background: rgba(255,255,255,0.15);
-        transform: none;
+        transform: none !important;
         opacity: 0.8;
         box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
