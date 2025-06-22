@@ -108,27 +108,27 @@ button:not(:hover):not(:active):not(:disabled) {
     }
     
     .btn-complete:hover {
-        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        background: linear-gradient(135deg, #10b981, #059669);
         transform: none !important;
-        box-shadow: none;
+        box-shadow: 0 8px 32px rgba(16, 185, 129, 0.15);
     }
     
     .btn-postpone:hover {
-        background: linear-gradient(135deg, #ffc107 0%, #fd7e14 100%);
+        background: linear-gradient(135deg, #f59e0b, #d97706);
         transform: none !important;
-        box-shadow: none;
+        box-shadow: 0 8px 32px rgba(245, 158, 11, 0.15);
     }
     
     .btn-postpone-week:hover {
-        background: linear-gradient(135deg, #6f42c1 0%, #e83e8c 100%);
+        background: linear-gradient(135deg, #8b5cf6, #7c3aed);
         transform: none !important;
-        box-shadow: none;
+        box-shadow: 0 8px 32px rgba(139, 92, 246, 0.15);
     }
     
     .btn-next:hover {
-        background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+        background: linear-gradient(135deg, #64748b, #475569);
         transform: none !important;
-        box-shadow: none;
+        box-shadow: 0 8px 32px rgba(100, 116, 139, 0.15);
     }
     
     .btn-edit-floating:hover {
@@ -481,15 +481,15 @@ button:disabled:hover {
 }
 
 .btn-complete {
-    background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+    background: linear-gradient(135deg, #10b981, #059669);
     color: white;
     font-weight: 600;
     padding: 16px 8px;
     font-size: 14px;
-    border-radius: 16px;
+    border-radius: 20px;
     border: none;
     text-align: center;
-    min-height: 60px;
+    min-height: 64px;
     width: 100%;
     min-width: 0;
     max-width: 100%;
@@ -498,39 +498,43 @@ button:disabled:hover {
     align-items: center;
     justify-content: center;
     gap: 4px;
-    transition: all 0.3s ease;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
     overflow: hidden;
     box-sizing: border-box;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 8px 32px rgba(16, 185, 129, 0.15);
 }
 
 .btn-complete:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 25px rgba(40, 167, 69, 0.4);
+    transform: translateY(-6px) scale(1.02);
+    box-shadow: 0 16px 40px rgba(16, 185, 129, 0.3);
+    background: linear-gradient(135deg, #059669, #047857);
 }
 
 .btn-complete:not(:hover):not(:active):not(:disabled) {
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
 }
 
 .btn-complete::before {
     content: '✓';
-    font-size: 20px;
+    font-size: 22px;
     display: block;
     margin-bottom: 4px;
     font-weight: bold;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
 }
 
 .btn-postpone {
-    background: linear-gradient(135deg, #ffc107 0%, #fd7e14 100%);
-    color: #333;
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    color: white;
     font-weight: 600;
     padding: 16px 8px;
     font-size: 14px;
-    border-radius: 16px;
+    border-radius: 20px;
     border: none;
     text-align: center;
-    min-height: 60px;
+    min-height: 64px;
     width: 100%;
     min-width: 0;
     max-width: 100%;
@@ -539,36 +543,40 @@ button:disabled:hover {
     align-items: center;
     justify-content: center;
     gap: 4px;
-    transition: all 0.3s ease;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     box-sizing: border-box;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 8px 32px rgba(245, 158, 11, 0.15);
 }
 
 .btn-postpone:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 25px rgba(255, 193, 7, 0.4);
+    transform: translateY(-6px) scale(1.02);
+    box-shadow: 0 16px 40px rgba(245, 158, 11, 0.3);
+    background: linear-gradient(135deg, #d97706, #b45309);
 }
 
 .btn-postpone:not(:hover):not(:active):not(:disabled) {
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
 }
 
 .btn-postpone::before {
     content: '⏰';
-    font-size: 20px;
+    font-size: 22px;
     display: block;
     margin-bottom: 4px;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
 }
 
 .btn-postpone-week {
-    background: linear-gradient(135deg, #6f42c1 0%, #e83e8c 100%);
+    background: linear-gradient(135deg, #8b5cf6, #7c3aed);
     color: white;
     font-weight: 600;
     padding: 16px 8px;
     font-size: 14px;
-    border-radius: 16px;
+    border-radius: 20px;
     border: none;
     text-align: center;
-    min-height: 60px;
+    min-height: 64px;
     width: 100%;
     min-width: 0;
     max-width: 100%;
@@ -577,57 +585,65 @@ button:disabled:hover {
     align-items: center;
     justify-content: center;
     gap: 4px;
-    transition: all 0.3s ease;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     box-sizing: border-box;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 8px 32px rgba(139, 92, 246, 0.15);
 }
 
 .btn-postpone-week:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 25px rgba(111, 66, 193, 0.4);
+    transform: translateY(-6px) scale(1.02);
+    box-shadow: 0 16px 40px rgba(139, 92, 246, 0.3);
+    background: linear-gradient(135deg, #7c3aed, #6d28d9);
 }
 
 .btn-postpone-week:not(:hover):not(:active):not(:disabled) {
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
 }
 
 .btn-postpone-week::before {
     content: '📅';
-    font-size: 20px;
+    font-size: 22px;
     display: block;
     margin-bottom: 4px;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
 }
 
 .btn-next {
-    background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+    background: linear-gradient(135deg, #64748b, #475569);
     color: white;
     font-weight: 500;
-    padding: 14px 32px;
+    padding: 16px 32px;
     font-size: 15px;
-    border-radius: 12px;
+    border-radius: 16px;
     border: none;
-    transition: all 0.3s ease;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 8px 32px rgba(100, 116, 139, 0.15);
 }
 
 .btn-next:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(108, 117, 125, 0.3);
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: 0 12px 32px rgba(100, 116, 139, 0.3);
+    background: linear-gradient(135deg, #475569, #334155);
 }
 
 .btn-next:not(:hover):not(:active):not(:disabled) {
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
 }
 
 .btn-next::before {
     content: '→';
-    font-size: 16px;
+    font-size: 18px;
     display: inline;
     margin-right: 8px;
     margin-bottom: 0;
     font-weight: bold;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
 }
 
 /* Loading spinner animation */
@@ -716,8 +732,10 @@ button:disabled:hover {
     .btn-complete,
     .btn-postpone,
     .btn-postpone-week {
-        padding: 14px 6px;
+        padding: 12px 6px;
         font-size: 13px;
+        min-height: 56px;
+        border-radius: 16px;
     }
 }
 
