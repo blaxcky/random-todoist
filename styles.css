@@ -415,8 +415,8 @@ button:disabled:hover {
 
 #task-description {
     color: white;
-    margin: 0 -20px 16px -20px;
-    line-height: 1.6;
+    margin: 0 -20px 12px -20px;
+    line-height: 1.4;
     flex-shrink: 0;
     background: linear-gradient(135deg, rgba(228, 67, 50, 0.9) 0%, rgba(214, 54, 33, 0.9) 100%);
     border-radius: 0 0 12px 12px;
@@ -429,9 +429,9 @@ button:disabled:hover {
 }
 
 .task-description-content {
-    padding: 12px 20px;
+    padding: 8px 20px;
     transition: all 0.3s ease;
-    max-height: 80px;
+    max-height: 50px;
     overflow: hidden;
     position: relative;
 }
@@ -447,7 +447,7 @@ button:disabled:hover {
     bottom: 0;
     left: 0;
     right: 0;
-    height: 30px;
+    height: 20px;
     background: linear-gradient(transparent, rgba(228, 67, 50, 0.9));
     pointer-events: none;
 }
@@ -460,10 +460,10 @@ button:disabled:hover {
     background: rgba(255, 255, 255, 0.15);
     color: white;
     border: none;
-    padding: 6px 12px;
-    margin: 0 20px 8px 20px;
-    border-radius: 12px;
-    font-size: 11px;
+    padding: 4px 10px;
+    margin: 0 20px 6px 20px;
+    border-radius: 8px;
+    font-size: 10px;
     font-weight: 500;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -471,7 +471,7 @@ button:disabled:hover {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 4px;
+    gap: 3px;
 }
 
 .task-description-toggle:hover {
