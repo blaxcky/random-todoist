@@ -421,7 +421,7 @@ button:disabled:hover {
 
 #task-description {
     color: white;
-    margin: 0 -20px 8px -20px;
+    margin: 0 -20px 0 -20px;
     padding: 0;
     line-height: 1.3;
     flex-shrink: 0;
@@ -434,24 +434,21 @@ button:disabled:hover {
     overflow: hidden;
     transition: all 0.3s ease;
     position: relative;
+    min-height: 0;
 }
 
-.task-description-content {
-    padding: 2px 20px 4px 20px;
-    margin: 0;
-    transition: all 0.3s ease;
+#task-description.task-description-content {
     max-height: 30px;
     overflow: hidden;
-    position: relative;
     line-height: 1.2;
 }
 
-.task-description-content.expanded {
+#task-description.task-description-content.expanded {
     max-height: none;
     overflow: visible;
 }
 
-.task-description-content.has-overflow::after {
+#task-description.task-description-content.has-overflow::after {
     content: '';
     position: absolute;
     bottom: 0;
@@ -462,7 +459,7 @@ button:disabled:hover {
     pointer-events: none;
 }
 
-.task-description-content.expanded::after {
+#task-description.task-description-content.expanded::after {
     display: none;
 }
 

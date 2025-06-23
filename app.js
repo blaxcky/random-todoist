@@ -880,34 +880,30 @@ class TodoistApp {
         const isLongDescription = description.length > 200;
         
         if (isLongDescription) {
-            descriptionElement.innerHTML = `
-                <div class="task-description-content has-overflow" id="task-description-content">
-                    ${this.formatLinks(description)}
-                    <button class="task-description-toggle" id="task-description-toggle">
+            descriptionElement.innerHTML = `${this.formatLinks(description)}<button class="task-description-toggle" id="task-description-toggle">
                         <span>Mehr anzeigen</span>
                         <span style="margin-left: 2px;">↓</span>
-                    </button>
-                </div>
-            `;
+                    </button>`;
+            descriptionElement.className = 'task-description-content has-overflow';
+            descriptionElement.style.padding = '2px 20px 4px 20px';
             
             // Add event listener for toggle
             const toggleButton = document.getElementById('task-description-toggle');
-            const content = document.getElementById('task-description-content');
             
             if (toggleButton && !toggleButton.hasAttribute('data-bound')) {
                 toggleButton.addEventListener('click', () => {
-                    const isExpanded = content.classList.contains('expanded');
+                    const isExpanded = descriptionElement.classList.contains('expanded');
                     
                     if (isExpanded) {
-                        content.classList.remove('expanded');
-                        content.classList.add('has-overflow');
+                        descriptionElement.classList.remove('expanded');
+                        descriptionElement.classList.add('has-overflow');
                         toggleButton.innerHTML = `
                             <span>Mehr anzeigen</span>
                             <span style="margin-left: 2px;">↓</span>
                         `;
                     } else {
-                        content.classList.add('expanded');
-                        content.classList.remove('has-overflow');
+                        descriptionElement.classList.add('expanded');
+                        descriptionElement.classList.remove('has-overflow');
                         toggleButton.innerHTML = `
                             <span>Weniger anzeigen</span>
                             <span style="margin-left: 2px;">↑</span>
@@ -917,12 +913,9 @@ class TodoistApp {
                 toggleButton.setAttribute('data-bound', 'true');
             }
         } else {
-            // Short description, show normally
-            descriptionElement.innerHTML = `
-                <div class="task-description-content">
-                    ${this.formatLinks(description)}
-                </div>
-            `;
+            // Short description, show normally - no wrapper div
+            descriptionElement.innerHTML = this.formatLinks(description);
+            descriptionElement.style.padding = '6px 20px';
         }
     }
 
