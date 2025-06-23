@@ -883,11 +883,11 @@ class TodoistApp {
             descriptionElement.innerHTML = `
                 <div class="task-description-content has-overflow" id="task-description-content">
                     ${this.formatLinks(description)}
+                    <button class="task-description-toggle" id="task-description-toggle">
+                        <span>Mehr anzeigen</span>
+                        <span style="margin-left: 2px;">↓</span>
+                    </button>
                 </div>
-                <button class="task-description-toggle" id="task-description-toggle">
-                    <span>Mehr anzeigen</span>
-                    <span style="margin-left: 2px;">↓</span>
-                </button>
             `;
             
             // Add event listener for toggle

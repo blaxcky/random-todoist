@@ -467,24 +467,25 @@ button:disabled:hover {
 }
 
 .task-description-toggle {
-    background: rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.2);
     color: white;
     border: none;
     padding: 4px 8px;
-    margin: 0;
+    margin: 4px 0 0 0;
     border-radius: 6px;
     font-size: 11px;
     font-weight: 500;
     cursor: pointer;
     transition: all 0.3s ease;
     backdrop-filter: blur(10px);
-    display: flex;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 2px;
     position: absolute;
-    bottom: 2px;
-    right: 20px;
+    bottom: 4px;
+    right: 4px;
+    z-index: 10;
 }
 
 .task-description-toggle:hover {
